@@ -2,7 +2,7 @@
 {
     public class Miner : ResourceProducingWorker
     {
-        public Miner(int foodCost, int output) : base(foodCost, output)
+        public Miner(int level, int output) : base(level, output)
         {
         }
     }

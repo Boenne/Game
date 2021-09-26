@@ -2,8 +2,9 @@
 {
     public class Soldier : Worker
     {
-        public Soldier(int foodCost) : base(foodCost)
+        public Soldier(int level) : base(level)
         {
+            
         }
     }
 }

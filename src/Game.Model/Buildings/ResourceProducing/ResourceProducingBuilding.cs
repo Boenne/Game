@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Game.Model.Resources;
 using Game.Model.Workers;
@@ -6,7 +7,7 @@ using Game.Model.Workers.ResourceProducing;
 
 namespace Game.Model.Buildings.ResourceProducing
 {
-    public abstract class ResourceProducingBuilding<TWorker, TResource> : Building<TWorker>
+    public abstract class ResourceProducingBuilding<TWorker, TResource> : Building<TWorker>, IResourceProducingBuilding
         where TWorker : ResourceProducingWorker where TResource : Resource
     {
         protected ResourceProducingBuilding(int level, int availableResources)
@@ -18,6 +19,7 @@ namespace Game.Model.Buildings.ResourceProducing
         public int AvailableResources { get; private set; }
         public int ResourcesGathered { get; private set; }
         public object Lock { get; } = new object();
+        public List<Carrier> CarriersGoingBackToStorage { get; } = new List<Carrier>();
 
         public void Produce()
         {
@@ -45,16 +47,24 @@ namespace Game.Model.Buildings.ResourceProducing
                 if (ResourcesGathered >= carrier.MaxResourceLimit)
                 {
                     ResourcesGathered -= carrier.MaxResourceLimit;
-                    resource.Quantity = ResourcesGathered;
+                    resource.Quantity = carrier.MaxResourceLimit;
                 }
                 else
                 {
                     resource.Quantity = ResourcesGathered;
                     ResourcesGathered = 0;
                 }
+                CarriersGoingBackToStorage.Add(carrier);
+                carrier.Load(resource);
             }
+        }
 
-            carrier.Load(resource);
+        public void CarrierArrivedAtStorage(Carrier carrier)
+        {
+            lock (Lock)
+            {
+                CarriersGoingBackToStorage.Remove(carrier);
+            }
         }
     }
 }

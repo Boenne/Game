@@ -1,12 +1,12 @@
 ﻿namespace Game.Model.Workers
 {
-    public abstract class Worker
+    public abstract class Worker : Identifiable
     {
-        public int FoodCost { get; }
-
-        protected Worker(int foodCost)
+        protected Worker(int level)
         {
-            FoodCost = foodCost;
+            Level = level;
         }
+
+        public int Level { get; }
     }
 }

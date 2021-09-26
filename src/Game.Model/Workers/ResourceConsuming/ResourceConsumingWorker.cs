@@ -2,7 +2,7 @@
 {
     public class ResourceConsumingWorker : Worker
     {
-        public ResourceConsumingWorker(int foodCost) : base(foodCost)
+        public ResourceConsumingWorker(int level) : base(level)
         {
         }
     }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Game.Model.Buildings.Settings;
 using Game.Model.Resources;
@@ -27,13 +28,27 @@ namespace Game.Model.Buildings.Settlement
 
         public List<Carrier> Carriers { get; }
 
-        public void Unload(Carrier carrier)
+        public List<Carrier> GetCarriers(params Guid[] ids)
+        {
+            lock (Lock) {
+                var carriers = Carriers.Where(x => ids.Contains(x.Id)).ToList();
+                foreach (var carrier in carriers)
+                {
+                    Carriers.Remove(carrier);
+                }
+
+                return carriers;
+            }
+        }
+
+        public void UnloadCarrier(Carrier carrier)
         {
             lock (Lock)
             {
                 var storageResource = GetResource(carrier.Resource);
                 var resourceQuantity = carrier.Unload();
                 storageResource.Quantity += resourceQuantity;
+                Carriers.Add(carrier);
             }
         }
 

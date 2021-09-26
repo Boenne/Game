@@ -1,23 +1,87 @@
-﻿using System.Collections.Generic;
-using Game.Model.Workers;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Game.Model.Workers.ResourceProducing;
 
 namespace Game.Model.Buildings.Settlement
 {
     public class Keep
     {
-        private readonly object _lockObject = new object();
-        private readonly int _trainingTime;
+        public readonly object Lock = new object();
 
-        public Keep(int trainingTime)
+        public List<Miner> AvailableMiners { get; } = new List<Miner>();
+        public List<Farmer> AvailableFarmers { get; } = new List<Farmer>();
+        public List<Lumberjack> AvailableLumberjacks { get; } = new List<Lumberjack>();
+
+        public void AddMiner(Miner miner)
         {
-            _trainingTime = trainingTime;
+            lock (Lock)
+            {
+                AvailableMiners.Add(miner);
+            }
         }
 
-        public List<Worker> AvailableWorkers { get; } = new List<Worker>();
-
-        public void AddWorker(Worker worker)
+        public void AddFarmer(Farmer farmer)
         {
-            AvailableWorkers.Add(worker);
+            lock (Lock)
+            {
+                AvailableFarmers.Add(farmer);
+            }
+        }
+
+        public void AddLumberjack(Lumberjack lumberjack)
+        {
+            lock (Lock)
+            {
+                AvailableLumberjacks.Add(lumberjack);
+            }
+        }
+
+        public List<Miner> GetMiners(params Guid[] ids)
+        {
+            lock (Lock)
+            {
+                var miners = AvailableMiners.Where(x => ids.Contains(x.Id)).ToList();
+                foreach (var miner in miners)
+                {
+                    AvailableMiners.Remove(miner);
+                }
+                return miners;
+            }
+        }
+
+        public List<Farmer> GetFarmers(params Guid[] ids)
+        {
+            lock (Lock)
+            {
+                var farmers = AvailableFarmers.Where(x => ids.Contains(x.Id)).ToList();
+                foreach (var farmer in farmers)
+                {
+                    AvailableFarmers.Remove(farmer);
+                }
+                return farmers;
+            }
+        }
+
+        public List<Lumberjack> GetLumberjacks(params Guid[] ids)
+        {
+            lock (Lock)
+            {
+                var lumberjacks = AvailableLumberjacks.Where(x => ids.Contains(x.Id)).ToList();
+                foreach (var lumberjack in lumberjacks)
+                {
+                    AvailableLumberjacks.Remove(lumberjack);
+                }
+                return lumberjacks;
+            }
+        }
+
+        public int NumberOfIdleWorkers()
+        {
+            lock (Lock)
+            {
+                return AvailableMiners.Count + AvailableFarmers.Count + AvailableLumberjacks.Count;
+            }
         }
     }
 }

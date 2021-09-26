@@ -4,7 +4,7 @@
     {
         public int Output { get; }
 
-        public ResourceProducingWorker(int foodCost, int output) : base(foodCost)
+        public ResourceProducingWorker(int level, int output) : base(level)
         {
             Output = output;
         }

@@ -7,17 +7,14 @@ namespace Game.Model.Buildings.Settlement
 {
     public class Settlement
     {
-        public Settlement(int maximumNumberOfWorkers, int trainingTime, int foodRequirementForNewWorker,
-            int numberOfCarriers, int carrierResourceLimit)
+        public Settlement(int maximumNumberOfWorkers, int numberOfCarriers, int carrierResourceLimit)
         {
             MaximumNumberOfWorkers = maximumNumberOfWorkers;
-            FoodRequirementForNewWorker = foodRequirementForNewWorker;
-            Keep = new Keep(trainingTime);
+            Keep = new Keep();
             Storage = new Storage(numberOfCarriers, carrierResourceLimit);
         }
 
         public int MaximumNumberOfWorkers { get; }
-        public int FoodRequirementForNewWorker { get; }
         public object Lock { get; } = new object();
         public List<CopperMine> CopperMines { get; set; } = new List<CopperMine>();
         public List<Quarry> Quarries { get; set; } = new List<Quarry>();
@@ -79,12 +76,15 @@ namespace Game.Model.Buildings.Settlement
 
         public bool CanAddWorker()
         {
-            return MaximumNumberOfWorkers > CopperMines.Sum(x => x.NumberOfWorkers) +
-                   Forges.Sum(x => x.NumberOfWorkers) +
-                   Lumberyards.Sum(x => x.NumberOfWorkers) +
-                   Farms.Sum(x => x.NumberOfWorkers) +
-                   Barracks.Sum(x => x.NumberOfWorkers) +
-                   Keep.AvailableWorkers.Count;
+            lock (Lock)
+            {
+                return MaximumNumberOfWorkers > CopperMines.Sum(x => x.NumberOfWorkers) +
+                       Forges.Sum(x => x.NumberOfWorkers) +
+                       Lumberyards.Sum(x => x.NumberOfWorkers) +
+                       Farms.Sum(x => x.NumberOfWorkers) +
+                       Barracks.Sum(x => x.NumberOfWorkers) +
+                       Keep.NumberOfIdleWorkers();
+            }
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Game.Model.Workers
 {
-    public class Carrier
+    public class Carrier : Identifiable
     {
         public Carrier(int maxResourceLimit)
         {

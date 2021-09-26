@@ -41,9 +41,8 @@ namespace Game.ApplicationService.Factories
         {
             switch (level)
             {
-                case 1:
+                default:
                     return ResourceProducingBuildingSpecifications.Level1;
-                default: return null;
             }
         }
     }
