@@ -1,15 +1,9 @@
-﻿using Game.Model.Workers.ResourceProducing;
-using Game.Model.Workers.Settings.ResourceProducing;
+﻿using Game.Model.Factories;
+using Game.Model.Workers.ResourceProducing;
+using Game.Model.Workers.Settings.Specifications;
 
 namespace Game.ApplicationService.Factories
 {
-    public interface IWorkerFactoryService
-    {
-        Farmer CreateFarmer(int level);
-        Miner CreateMiner(int level);
-        Lumberjack CreateLumberjack(int level);
-    }
-
     public class WorkerFactoryService : IWorkerFactoryService
     {
         public Farmer CreateFarmer(int level)

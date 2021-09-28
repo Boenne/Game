@@ -1,10 +1,6 @@
 ﻿namespace Game.Model.Workers
 {
-    public class Soldier : Worker
+    public class Soldier
     {
-        public Soldier(int level) : base(level)
-        {
-            
-        }
     }
 }

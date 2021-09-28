@@ -7,7 +7,6 @@ namespace Game.Model.Buildings
 {
     public abstract class Building<T> : Identifiable where T : Worker
     {
-        public object Lock = new object();
         public int Level { get; protected set; }
         public List<T> Workers { get; } = new List<T>();
         public int NumberOfWorkers => Workers.Count;

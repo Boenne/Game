@@ -1,12 +1,19 @@
-﻿namespace Game.Model.Workers.ResourceProducing
+﻿using System;
+
+namespace Game.Model.Workers.ResourceProducing
 {
     public class ResourceProducingWorker : Worker
     {
-        public int Output { get; }
-
-        public ResourceProducingWorker(int level, int output) : base(level)
+        public ResourceProducingWorker(int level, int output, Type toolType) : base(level, toolType)
         {
             Output = output;
+        }
+
+        public int Output { get; }
+
+        public int TotalOutput()
+        {
+            return Output + (HasTool() ? Tool.Modifier : 0);
         }
     }
 }

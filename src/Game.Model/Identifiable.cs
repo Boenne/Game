@@ -10,5 +10,7 @@ namespace Game.Model
         }
 
         public Guid Id { get; }
+
+        protected static readonly object Lock = new object();
     }
 }

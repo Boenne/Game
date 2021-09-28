@@ -1,4 +1,4 @@
-﻿namespace Game.Model.Workers.Settings.ResourceProducing
+﻿namespace Game.Model.Workers.Settings.Specifications
 {
     public static class ResourceProducingWorkerSpecifications
     {

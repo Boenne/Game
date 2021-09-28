@@ -1,16 +1,9 @@
 ﻿using Game.Model.Buildings.ResourceProducing;
-using Game.Model.Buildings.Settings.ResourceProducing;
+using Game.Model.Buildings.Settings.Specifications;
+using Game.Model.Factories;
 
 namespace Game.ApplicationService.Factories
 {
-    public interface IBuildingFactoryService
-    {
-        CopperMine CreateCopperMine(int level);
-        Lumberyard CreateLumberyard(int level);
-        Farm CreateFarm(int level);
-        Quarry CreateQuarry(int level);
-    }
-
     public class BuildingFactoryService : IBuildingFactoryService
     {
         public CopperMine CreateCopperMine(int level)

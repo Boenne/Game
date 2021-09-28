@@ -1,4 +1,4 @@
-﻿namespace Game.Model.Buildings.Settings.ResourceProducing
+﻿namespace Game.Model.Buildings.Settings.Specifications
 {
     public static class ResourceProducingBuildingSpecifications
     {

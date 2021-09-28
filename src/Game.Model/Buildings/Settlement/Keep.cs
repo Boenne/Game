@@ -5,10 +5,8 @@ using Game.Model.Workers.ResourceProducing;
 
 namespace Game.Model.Buildings.Settlement
 {
-    public class Keep
+    public class Keep : Identifiable
     {
-        public readonly object Lock = new object();
-
         public List<Miner> AvailableMiners { get; } = new List<Miner>();
         public List<Farmer> AvailableFarmers { get; } = new List<Farmer>();
         public List<Lumberjack> AvailableLumberjacks { get; } = new List<Lumberjack>();

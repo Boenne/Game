@@ -1,9 +1,6 @@
-﻿using Game.Model.Workers;
-
-namespace Game.Model.Buildings
+﻿namespace Game.Model.Buildings
 {
-    public class Barrack : Building<Soldier>
+    public class Barrack
     {
-        
     }
 }

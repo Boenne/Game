@@ -7,7 +7,7 @@ using Game.Model.Workers;
 
 namespace Game.Model.Buildings.Settlement
 {
-    public class Storage
+    public class Storage : Identifiable
     {
         public Storage(int numberOfCarriers, int carrierResourceLimit)
         {
@@ -23,8 +23,6 @@ namespace Game.Model.Buildings.Settlement
         public Copper Copper { get; set; } = new Copper();
         public Stone Stone { get; set; } = new Stone();
         public Lumber Lumber { get; set; } = new Lumber();
-
-        public object Lock { get; } = new object();
 
         public List<Carrier> Carriers { get; }
 

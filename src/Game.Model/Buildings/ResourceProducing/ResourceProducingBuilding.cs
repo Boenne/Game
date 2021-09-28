@@ -18,14 +18,14 @@ namespace Game.Model.Buildings.ResourceProducing
 
         public int AvailableResources { get; private set; }
         public int ResourcesGathered { get; private set; }
-        public object Lock { get; } = new object();
+
         public List<Carrier> CarriersGoingBackToStorage { get; } = new List<Carrier>();
 
         public void Produce()
         {
             lock (Lock)
             {
-                var totalOutput = Workers.Sum(x => x.Output);
+                var totalOutput = Workers.Sum(x => x.TotalOutput());
                 if (AvailableResources >= totalOutput)
                 {
                     AvailableResources -= totalOutput;
