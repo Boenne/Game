@@ -36,7 +36,7 @@ namespace Game.Model.Workers
         {
             lock (Lock)
             {
-                var tool = Tool.Copy();
+                var tool = Tool?.Copy();
                 Tool = null;
                 return tool;
             }

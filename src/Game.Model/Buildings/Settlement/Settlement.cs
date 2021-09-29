@@ -7,7 +7,6 @@ using Game.Model.Buildings.ResourceProducing;
 using Game.Model.Buildings.Settings.Costs;
 using Game.Model.Factories;
 using Game.Model.Workers;
-using Game.Model.Workers.ResourceProducing;
 using Game.Model.Workers.Settings.Costs;
 
 namespace Game.Model.Buildings.Settlement
@@ -55,15 +54,15 @@ namespace Game.Model.Buildings.Settlement
         {
             lock (Lock)
             {
-                return MaximumNumberOfWorkers > CopperMines.Sum(x => x.NumberOfWorkers) +
-                       Forge.NumberOfWorkers +
-                       Lumberyards.Sum(x => x.NumberOfWorkers) +
-                       Farms.Sum(x => x.NumberOfWorkers) +
+                return MaximumNumberOfWorkers > CopperMines.Sum(x => x.NumberOfWorkers()) +
+                       Lumberyards.Sum(x => x.NumberOfWorkers()) +
+                       Farms.Sum(x => x.NumberOfWorkers()) +
+                       Forge.NumberOfWorkers() +
                        Keep.NumberOfIdleWorkers();
             }
         }
 
-        public async Task AddCopperMine(int level)
+        public async Task BuildCopperMine(int level)
         {
             if (level == 1)
                 if (Storage.Consume(BuildingCosts.CopperMine.Level1))
@@ -77,7 +76,7 @@ namespace Game.Model.Buildings.Settlement
                 }
         }
 
-        public async Task AddFarm(int level)
+        public async Task BuildFarm(int level)
         {
             if (level == 1)
                 if (Storage.Consume(BuildingCosts.Farm.Level1))
@@ -91,7 +90,7 @@ namespace Game.Model.Buildings.Settlement
                 }
         }
 
-        public async Task AddQuarry(int level)
+        public async Task BuildQuarry(int level)
         {
             if (level == 1)
                 if (Storage.Consume(BuildingCosts.Quarry.Level1))
@@ -105,7 +104,7 @@ namespace Game.Model.Buildings.Settlement
                 }
         }
 
-        public async Task AddLumberyard(int level)
+        public async Task BuildLumberyard(int level)
         {
             if (level == 1)
                 if (Storage.Consume(BuildingCosts.Lumberyard.Level1))
@@ -140,7 +139,7 @@ namespace Game.Model.Buildings.Settlement
                 {
                     var miner = _workerFactoryService.CreateMiner(level);
                     await Task.Delay(ExecutionTimes.TrainingTime);
-                    Keep.AddMiner(miner);
+                    Keep.AddWorker(miner);
                 }
         }
 
@@ -151,7 +150,7 @@ namespace Game.Model.Buildings.Settlement
                 {
                     var farmer = _workerFactoryService.CreateFarmer(level);
                     await Task.Delay(ExecutionTimes.TrainingTime);
-                    Keep.AddFarmer(farmer);
+                    Keep.AddWorker(farmer);
                 }
         }
 
@@ -162,58 +161,42 @@ namespace Game.Model.Buildings.Settlement
                 {
                     var lumberjack = _workerFactoryService.CreateLumberjack(level);
                     await Task.Delay(ExecutionTimes.TrainingTime);
-                    Keep.AddLumberjack(lumberjack);
+                    Keep.AddWorker(lumberjack);
                 }
         }
 
-        public async Task MoveMinersToBuilding(Building<Miner> building, params Guid[] minerIds)
+        public async Task MoveWorkersToBuilding<T>(Building<T> building, params Guid[] workerIds) where T : Worker
         {
-            var miners = Keep.GetMiners(minerIds);
+            var workers = Keep.GetWorkers(workerIds);
             await Task.Delay(ExecutionTimes.WorkerTravelTime);
-            foreach (var miner in miners) building.AddWorker(miner);
+            foreach (var worker in workers.Where(x => x.GetType() == typeof(T)))
+            {
+                building.AddWorker((T)worker);
+            }
         }
 
-        public async Task MoveFarmersToBuilding(Building<Farmer> building, params Guid[] farmerIds)
+        public async Task MoveWorkersToKeep<T>(Building<T> building, params Guid[] workerIds) where T : Worker
         {
-            var farmers = Keep.GetFarmers(farmerIds);
+            var workers = building.RemoveWorker(workerIds);
             await Task.Delay(ExecutionTimes.WorkerTravelTime);
-            foreach (var farmer in farmers) building.AddWorker(farmer);
+            foreach (var worker in workers.Where(x => x.GetType() == typeof(T)))
+            {
+                Keep.AddWorker(worker);
+            }
         }
 
-        public async Task MoveLumberjacksToBuilding(Building<Lumberjack> building,
-            params Guid[] lumberjackIds)
+        public void EquipWorkerTool(Guid toolId, Worker worker)
         {
-            var lumberjacks = Keep.GetLumberjacks(lumberjackIds);
-            await Task.Delay(ExecutionTimes.WorkerTravelTime);
-            foreach (var lumberjack in lumberjacks) building.AddWorker(lumberjack);
-        }
-
-        public async Task MoveMinersToKeep(Building<Miner> building, params Guid[] minerIds)
-        {
-            var miners = building.RemoveWorker(minerIds);
-            await Task.Delay(ExecutionTimes.WorkerTravelTime);
-            foreach (var miner in miners) Keep.AddMiner(miner);
-        }
-
-        public async Task MoveFarmersToKeep(Building<Farmer> building, params Guid[] farmerIds)
-        {
-            var farmers = building.RemoveWorker(farmerIds);
-            await Task.Delay(ExecutionTimes.WorkerTravelTime);
-            foreach (var farmer in farmers) Keep.AddFarmer(farmer);
-        }
-
-        public async Task MoveLumberjacksToKeep(Building<Lumberjack> building, params Guid[] lumberjackIds)
-        {
-            var lumberjacks = building.RemoveWorker(lumberjackIds);
-            await Task.Delay(ExecutionTimes.WorkerTravelTime);
-            foreach (var lumberjack in lumberjacks) Keep.AddLumberjack(lumberjack);
-        }
-
-        public void EquipWorkerWithTool(Guid id, Worker worker)
-        {
-            var tool = Forge.GetTool(id);
+            var tool = Forge.GetTool(toolId);
             if (tool != null)
                 worker.SetTool(tool);
+        }
+
+        public void UnequipWorkerTool(Worker worker)
+        {
+            var tool = worker.RemoveTool();
+            if (tool != null)
+                Forge.AddTool(tool);
         }
     }
 }

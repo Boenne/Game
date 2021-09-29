@@ -3,15 +3,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using Game.Model.Buildings.ResourceProducing;
 using Game.Model.Buildings.Settings;
-using Game.Model.Buildings.Settlement;
 using Game.Model.Factories;
+using Game.Model.Items.Tools;
 using Game.Model.Resources;
 using Game.Model.Workers.ResourceProducing;
 using Moq;
 using Shouldly;
 using Xunit;
 
-namespace Game.Model.Tests.Buildings
+namespace Game.Model.Tests.Buildings.Settlement
 {
     public class SettlementTests
     {
@@ -27,106 +27,106 @@ namespace Game.Model.Tests.Buildings
         private readonly Mock<IToolFactoryService> _toolFactoryService;
 
         [Fact]
-        public async Task AddCopperMine_CanAfford_WillAdd()
+        public async Task BuildCopperMine_CanAfford_WillAdd()
         {
             _buildingFactoryService.Setup(x => x.CreateCopperMine(1)).Returns(new CopperMine(1, 0));
             StartingResources.Lumber = new Lumber(100);
             StartingResources.Stone = new Stone(100);
             var settlement = GetSettlement();
 
-            await settlement.AddCopperMine(1);
+            await settlement.BuildCopperMine(1);
 
             settlement.CopperMines.Count.ShouldBe(1);
             _buildingFactoryService.Verify(x => x.CreateCopperMine(1), Times.Once);
         }
 
         [Fact]
-        public async Task AddCopperMine_NoLumber_WillNotAdd()
+        public async Task BuildCopperMine_NoLumber_WillNotAdd()
         {
             StartingResources.Lumber = new Lumber(0);
             var settlement = GetSettlement();
 
-            await settlement.AddCopperMine(1);
+            await settlement.BuildCopperMine(1);
 
-            settlement.CopperMines.Count.ShouldBe(0);
+            settlement.CopperMines.ShouldBeEmpty();
             _buildingFactoryService.Verify(x => x.CreateCopperMine(1), Times.Never);
         }
 
         [Fact]
-        public async Task AddFarm_CanAfford_WillAdd()
+        public async Task BuildFarm_CanAfford_WillAdd()
         {
             _buildingFactoryService.Setup(x => x.CreateFarm(1)).Returns(new Farm(1, 0));
             StartingResources.Lumber = new Lumber(100);
             StartingResources.Stone = new Stone(100);
             var settlement = GetSettlement();
 
-            await settlement.AddFarm(1);
+            await settlement.BuildFarm(1);
 
             settlement.Farms.Count.ShouldBe(1);
             _buildingFactoryService.Verify(x => x.CreateFarm(1), Times.Once);
         }
 
         [Fact]
-        public async Task AddFarm_NoLumber_WillNotAdd()
+        public async Task BuildFarm_NoLumber_WillNotAdd()
         {
             StartingResources.Lumber = new Lumber(0);
             var settlement = GetSettlement();
 
-            await settlement.AddFarm(1);
+            await settlement.BuildFarm(1);
 
-            settlement.Farms.Count.ShouldBe(0);
+            settlement.Farms.ShouldBeEmpty();
             _buildingFactoryService.Verify(x => x.CreateFarm(1), Times.Never);
         }
 
         [Fact]
-        public async Task AddLumberyard_CanAfford_WillAdd()
+        public async Task BuildLumberyard_CanAfford_WillAdd()
         {
             _buildingFactoryService.Setup(x => x.CreateLumberyard(1)).Returns(new Lumberyard(1, 0));
             StartingResources.Lumber = new Lumber(100);
             StartingResources.Stone = new Stone(100);
             var settlement = GetSettlement();
 
-            await settlement.AddLumberyard(1);
+            await settlement.BuildLumberyard(1);
 
             settlement.Lumberyards.Count.ShouldBe(1);
             _buildingFactoryService.Verify(x => x.CreateLumberyard(1), Times.Once);
         }
 
         [Fact]
-        public async Task AddLumberyard_NoStone_WillNotAdd()
+        public async Task BuildLumberyard_NoStone_WillNotAdd()
         {
             StartingResources.Stone = new Stone(0);
             var settlement = GetSettlement();
 
-            await settlement.AddLumberyard(1);
+            await settlement.BuildLumberyard(1);
 
-            settlement.Lumberyards.Count.ShouldBe(0);
+            settlement.Lumberyards.ShouldBeEmpty();
             _buildingFactoryService.Verify(x => x.CreateLumberyard(1), Times.Never);
         }
 
         [Fact]
-        public async Task AddQuarry_CanAfford_WillAdd()
+        public async Task BuildQuarry_CanAfford_WillAdd()
         {
             _buildingFactoryService.Setup(x => x.CreateQuarry(1)).Returns(new Quarry(1, 0));
             StartingResources.Lumber = new Lumber(100);
             StartingResources.Stone = new Stone(100);
             var settlement = GetSettlement();
 
-            await settlement.AddQuarry(1);
+            await settlement.BuildQuarry(1);
 
             settlement.Quarries.Count.ShouldBe(1);
             _buildingFactoryService.Verify(x => x.CreateQuarry(1), Times.Once);
         }
 
         [Fact]
-        public async Task AddQuarry_NoLumber_WillNotAdd()
+        public async Task BuildQuarry_NoLumber_WillNotAdd()
         {
             StartingResources.Lumber = new Lumber(0);
             var settlement = GetSettlement();
 
-            await settlement.AddQuarry(1);
+            await settlement.BuildQuarry(1);
 
-            settlement.Quarries.Count.ShouldBe(0);
+            settlement.Quarries.ShouldBeEmpty();
             _buildingFactoryService.Verify(x => x.CreateQuarry(1), Times.Never);
         }
 
@@ -171,7 +171,7 @@ namespace Game.Model.Tests.Buildings
 
             await settlement.TrainMiner(1);
 
-            settlement.Keep.AvailableMiners.Count.ShouldBe(1);
+            settlement.Keep.AvailableWorkers.Count.ShouldBe(1);
             _workerFactoryService.Verify(x => x.CreateMiner(1), Times.Once);
         }
 
@@ -180,11 +180,11 @@ namespace Game.Model.Tests.Buildings
         {
             StartingResources.Food = new Food(100);
             var settlement = GetSettlement();
-            settlement.Keep.AddFarmer(new Farmer(1, 0));
+            settlement.Keep.AddWorker(new Farmer(1, 0));
 
             await settlement.TrainMiner(1);
 
-            settlement.Keep.AvailableMiners.Count.ShouldBe(0);
+            settlement.Keep.AvailableWorkers.Count.ShouldBe(1);
             _workerFactoryService.Verify(x => x.CreateMiner(1), Times.Never);
         }
 
@@ -196,7 +196,7 @@ namespace Game.Model.Tests.Buildings
 
             await settlement.TrainMiner(1);
 
-            settlement.Keep.AvailableMiners.Count.ShouldBe(0);
+            settlement.Keep.AvailableWorkers.ShouldBeEmpty();
             _workerFactoryService.Verify(x => x.CreateMiner(1), Times.Never);
         }
 
@@ -209,7 +209,7 @@ namespace Game.Model.Tests.Buildings
 
             await settlement.TrainFarmer(1);
 
-            settlement.Keep.AvailableFarmers.Count.ShouldBe(1);
+            settlement.Keep.AvailableWorkers.Count.ShouldBe(1);
             _workerFactoryService.Verify(x => x.CreateFarmer(1), Times.Once);
         }
 
@@ -218,11 +218,11 @@ namespace Game.Model.Tests.Buildings
         {
             StartingResources.Food = new Food(100);
             var settlement = GetSettlement();
-            settlement.Keep.AddMiner(new Miner(1, 0));
+            settlement.Keep.AddWorker(new Miner(1, 0));
 
             await settlement.TrainFarmer(1);
 
-            settlement.Keep.AvailableFarmers.Count.ShouldBe(0);
+            settlement.Keep.AvailableWorkers.Count.ShouldBe(1);
             _workerFactoryService.Verify(x => x.CreateFarmer(1), Times.Never);
         }
 
@@ -234,7 +234,7 @@ namespace Game.Model.Tests.Buildings
 
             await settlement.TrainFarmer(1);
 
-            settlement.Keep.AvailableFarmers.Count.ShouldBe(0);
+            settlement.Keep.AvailableWorkers.ShouldBeEmpty();
             _workerFactoryService.Verify(x => x.CreateFarmer(1), Times.Never);
         }
 
@@ -247,7 +247,7 @@ namespace Game.Model.Tests.Buildings
 
             await settlement.TrainLumberjack(1);
 
-            settlement.Keep.AvailableLumberjacks.Count.ShouldBe(1);
+            settlement.Keep.AvailableWorkers.Count.ShouldBe(1);
             _workerFactoryService.Verify(x => x.CreateLumberjack(1), Times.Once);
         }
 
@@ -256,11 +256,11 @@ namespace Game.Model.Tests.Buildings
         {
             StartingResources.Food = new Food(100);
             var settlement = GetSettlement();
-            settlement.Keep.AddMiner(new Miner(1, 0));
+            settlement.Keep.AddWorker(new Miner(1, 0));
 
             await settlement.TrainLumberjack(1);
 
-            settlement.Keep.AvailableLumberjacks.Count.ShouldBe(0);
+            settlement.Keep.AvailableWorkers.Count.ShouldBe(1);
             _workerFactoryService.Verify(x => x.CreateLumberjack(1), Times.Never);
         }
 
@@ -272,102 +272,42 @@ namespace Game.Model.Tests.Buildings
 
             await settlement.TrainLumberjack(1);
 
-            settlement.Keep.AvailableLumberjacks.Count.ShouldBe(0);
+            settlement.Keep.AvailableWorkers.ShouldBeEmpty();
             _workerFactoryService.Verify(x => x.CreateLumberjack(1), Times.Never);
         }
 
         [Fact]
-        public async Task MoveMinersToBuilding_MovesCorrectly()
+        public async Task MoveWorkersToBuilding_MovesCorrectly()
         {
             var settlement = GetSettlement();
             var miner = new Miner(1, 0);
             var miner2 = new Miner(1, 0);
             var quarry = new Quarry(1, 0);
-            settlement.Keep.AddMiner(miner);
-            settlement.Keep.AddMiner(miner2);
+            settlement.Keep.AddWorker(miner);
+            settlement.Keep.AddWorker(miner2);
 
-            await settlement.MoveMinersToBuilding(quarry, miner.Id, miner2.Id);
+            await settlement.MoveWorkersToBuilding(quarry, miner.Id, miner2.Id);
 
-            settlement.Keep.AvailableMiners.Count.ShouldBe(0);
-            quarry.NumberOfWorkers.ShouldBe(2);
+            settlement.Keep.AvailableWorkers.ShouldBeEmpty();
+            quarry.NumberOfWorkers().ShouldBe(2);
         }
 
         [Fact]
-        public async Task MoveMinersToBuilding_InvalidMinerIds_DoesNothing()
+        public async Task MoveWorkersToBuilding_InvalidWorkerIds_DoesNothing()
         {
             var settlement = GetSettlement();
             var miner = new Miner(1, 0);
             var quarry = new Quarry(1, 0);
-            settlement.Keep.AddMiner(miner);
+            settlement.Keep.AddWorker(miner);
 
-            await settlement.MoveMinersToBuilding(quarry, Guid.Empty);
+            await settlement.MoveWorkersToBuilding(quarry, Guid.Empty);
 
-            settlement.Keep.AvailableMiners.Count.ShouldBe(1);
-            quarry.NumberOfWorkers.ShouldBe(0);
+            settlement.Keep.AvailableWorkers.Count.ShouldBe(1);
+            quarry.NumberOfWorkers().ShouldBe(0);
         }
 
         [Fact]
-        public async Task MoveFarmersToBuilding_MovesCorrectly()
-        {
-            var settlement = GetSettlement();
-            var farmer = new Farmer(1, 0);
-            var farmer2 = new Farmer(1, 0);
-            var farm = new Farm(1, 0);
-            settlement.Keep.AddFarmer(farmer);
-            settlement.Keep.AddFarmer(farmer2);
-
-            await settlement.MoveFarmersToBuilding(farm, farmer.Id, farmer2.Id);
-
-            settlement.Keep.AvailableFarmers.Count.ShouldBe(0);
-            farm.NumberOfWorkers.ShouldBe(2);
-        }
-
-        [Fact]
-        public async Task MoveFarmersToBuilding_InvalidFarmerIds_DoesNothing()
-        {
-            var settlement = GetSettlement();
-            var farmer = new Farmer(1, 0);
-            var farm = new Farm(1, 0);
-            settlement.Keep.AddFarmer(farmer);
-
-            await settlement.MoveFarmersToBuilding(farm, Guid.Empty);
-
-            settlement.Keep.AvailableFarmers.Count.ShouldBe(1);
-            farm.NumberOfWorkers.ShouldBe(0);
-        }
-
-        [Fact]
-        public async Task MoveLumberjacksToBuilding_MovesCorrectly()
-        {
-            var settlement = GetSettlement();
-            var lumberjack = new Lumberjack(1, 0);
-            var lumberjack2 = new Lumberjack(1, 0);
-            var lumberyard = new Lumberyard(1, 0);
-            settlement.Keep.AddLumberjack(lumberjack);
-            settlement.Keep.AddLumberjack(lumberjack2);
-
-            await settlement.MoveLumberjacksToBuilding(lumberyard, lumberjack.Id, lumberjack2.Id);
-
-            settlement.Keep.AvailableLumberjacks.Count.ShouldBe(0);
-            lumberyard.NumberOfWorkers.ShouldBe(2);
-        }
-
-        [Fact]
-        public async Task MoveLumberjacksToBuilding_InvalidLumberjackIds_DoesNothing()
-        {
-            var settlement = GetSettlement();
-            var lumberjack = new Lumberjack(1, 0);
-            var lumberyard = new Lumberyard(1, 0);
-            settlement.Keep.AddLumberjack(lumberjack);
-
-            await settlement.MoveLumberjacksToBuilding(lumberyard, Guid.Empty);
-
-            settlement.Keep.AvailableLumberjacks.Count.ShouldBe(1);
-            lumberyard.NumberOfWorkers.ShouldBe(0);
-        }
-
-        [Fact]
-        public async Task MoveMinersToKeep_MovesCorrectly()
+        public async Task MoveWorkersToKeep_MovesCorrectly()
         {
             var settlement = GetSettlement();
             var miner = new Miner(1, 0);
@@ -376,89 +316,93 @@ namespace Game.Model.Tests.Buildings
             quarry.AddWorker(miner);
             quarry.AddWorker(miner2);
 
-            await settlement.MoveMinersToKeep(quarry, miner.Id, miner2.Id);
+            await settlement.MoveWorkersToKeep(quarry, miner.Id, miner2.Id);
 
-            quarry.NumberOfWorkers.ShouldBe(0);
-            settlement.Keep.AvailableMiners.Count.ShouldBe(2);
+            settlement.Keep.AvailableWorkers.Count.ShouldBe(2);
+            quarry.NumberOfWorkers().ShouldBe(0);
         }
 
         [Fact]
-        public async Task MoveMinersToKeep_InvalidMinerIds_DoesNothing()
+        public async Task MoveMinersToKeep_InvalidWorkerIds_DoesNothing()
         {
             var settlement = GetSettlement();
             var miner = new Miner(1, 0);
             var quarry = new Quarry(1, 0);
             quarry.AddWorker(miner);
 
-            await settlement.MoveMinersToKeep(quarry, Guid.Empty);
+            await settlement.MoveWorkersToKeep(quarry, Guid.Empty);
 
-            quarry.NumberOfWorkers.ShouldBe(1);
-            settlement.Keep.AvailableMiners.Count.ShouldBe(0);
+            settlement.Keep.AvailableWorkers.ShouldBeEmpty();
+            quarry.NumberOfWorkers().ShouldBe(1);
         }
 
         [Fact]
-        public async Task MoveFarmersToKeep_MovesCorrectly()
+        public void EquipWorkerWithTool_CorrectId_EquipsTool()
         {
             var settlement = GetSettlement();
-            var farmer = new Farmer(1, 0);
-            var farmer2 = new Farmer(1, 0);
-            var farm = new Farm(1, 0);
-            farm.AddWorker(farmer);
-            farm.AddWorker(farmer2);
+            var miner = new Miner(1, 0);
+            var pickaxe = new Pickaxe("", 0, 1);
+            settlement.Forge.Tools.Add(pickaxe);
 
-            await settlement.MoveFarmersToKeep(farm, farmer.Id, farmer2.Id);
+            settlement.EquipWorkerTool(pickaxe.Id, miner);
 
-            farm.NumberOfWorkers.ShouldBe(0);
-            settlement.Keep.AvailableFarmers.Count.ShouldBe(2);
+            miner.Tool.ShouldBe(pickaxe);
         }
 
         [Fact]
-        public async Task MoveFarmersToKeep_InvalidFarmerIds_DoesNothing()
+        public void EquipWorkerWithTool_IncorrectId_DoesNotEquipTool()
         {
             var settlement = GetSettlement();
-            var farmer = new Farmer(1, 0);
-            var farm = new Farm(1, 0);
-            farm.AddWorker(farmer);
+            var miner = new Miner(1, 0);
+            var pickaxe = new Pickaxe("", 0, 1);
+            settlement.Forge.Tools.Add(pickaxe);
 
-            await settlement.MoveFarmersToKeep(farm, Guid.Empty);
+            settlement.EquipWorkerTool(Guid.Empty, miner);
 
-            farm.NumberOfWorkers.ShouldBe(1);
-            settlement.Keep.AvailableFarmers.Count.ShouldBe(0);
+            miner.Tool.ShouldBeNull();
         }
 
         [Fact]
-        public async Task MoveLumberjacksToKeep_MovesCorrectly()
+        public void EquipWorkerWithTool_NoToolsInForge_DoesNotEquipTool()
         {
             var settlement = GetSettlement();
-            var lumberjack = new Lumberjack(1, 0);
-            var lumberjack2 = new Lumberjack(1, 0);
-            var lumberyard = new Lumberyard(1, 0);
-            lumberyard.AddWorker(lumberjack);
-            lumberyard.AddWorker(lumberjack2);
+            var miner = new Miner(1, 0);
+            var pickaxe = new Pickaxe("", 0, 1);
 
-            await settlement.MoveLumberjacksToKeep(lumberyard, lumberjack.Id, lumberjack2.Id);
+            settlement.EquipWorkerTool(pickaxe.Id, miner);
 
-            lumberyard.NumberOfWorkers.ShouldBe(0);
-            settlement.Keep.AvailableLumberjacks.Count.ShouldBe(2);
+            miner.Tool.ShouldBeNull();
         }
 
         [Fact]
-        public async Task MoveLumberjacksToKeep_InvalidLumberjackIds_DoesNothing()
+        public void UnequipWorkerTool_HasTool_UnequipsCorrectly()
         {
             var settlement = GetSettlement();
-            var lumberjack = new Lumberjack(1, 0);
-            var lumberyard = new Lumberyard(1, 0);
-            lumberyard.AddWorker(lumberjack);
+            var miner = new Miner(1, 0);
+            var pickaxe = new Pickaxe("", 0, 1);
+            miner.SetTool(pickaxe);
 
-            await settlement.MoveLumberjacksToKeep(lumberyard, Guid.Empty);
+            settlement.UnequipWorkerTool(miner);
 
-            lumberyard.NumberOfWorkers.ShouldBe(1);
-            settlement.Keep.AvailableLumberjacks.Count.ShouldBe(0);
+            settlement.Forge.Tools.Count.ShouldBe(1);
+            miner.HasTool().ShouldBeFalse();
         }
 
-        private Settlement GetSettlement()
+        [Fact]
+        public void UnequipWorkerTool_HasNoTool_DoesNothing()
         {
-            return new Settlement(1, 2, 2, _toolFactoryService.Object, _workerFactoryService.Object, _buildingFactoryService.Object);
+            var settlement = GetSettlement();
+            var miner = new Miner(1, 0);
+
+            settlement.UnequipWorkerTool(miner);
+
+            settlement.Forge.Tools.ShouldBeEmpty();
+            miner.HasTool().ShouldBeFalse();
+        }
+
+        private Model.Buildings.Settlement.Settlement GetSettlement()
+        {
+            return new Model.Buildings.Settlement.Settlement(1, 2, 2, _toolFactoryService.Object, _workerFactoryService.Object, _buildingFactoryService.Object);
         }
     }
 }

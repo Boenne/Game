@@ -1,76 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Game.Model.Workers.ResourceProducing;
+using Game.Model.Workers;
 
 namespace Game.Model.Buildings.Settlement
 {
     public class Keep : Identifiable
     {
-        public List<Miner> AvailableMiners { get; } = new List<Miner>();
-        public List<Farmer> AvailableFarmers { get; } = new List<Farmer>();
-        public List<Lumberjack> AvailableLumberjacks { get; } = new List<Lumberjack>();
+        public List<Worker> AvailableWorkers { get; } = new List<Worker>();
 
-        public void AddMiner(Miner miner)
+
+        public void AddWorker(Worker worker)
         {
             lock (Lock)
             {
-                AvailableMiners.Add(miner);
+                AvailableWorkers.Add(worker);
             }
         }
 
-        public void AddFarmer(Farmer farmer)
+        public List<Worker> GetWorkers(params Guid[] workerIds)
         {
             lock (Lock)
             {
-                AvailableFarmers.Add(farmer);
-            }
-        }
-
-        public void AddLumberjack(Lumberjack lumberjack)
-        {
-            lock (Lock)
-            {
-                AvailableLumberjacks.Add(lumberjack);
-            }
-        }
-
-        public List<Miner> GetMiners(params Guid[] ids)
-        {
-            lock (Lock)
-            {
-                var miners = AvailableMiners.Where(x => ids.Contains(x.Id)).ToList();
-                foreach (var miner in miners)
-                {
-                    AvailableMiners.Remove(miner);
-                }
-                return miners;
-            }
-        }
-
-        public List<Farmer> GetFarmers(params Guid[] ids)
-        {
-            lock (Lock)
-            {
-                var farmers = AvailableFarmers.Where(x => ids.Contains(x.Id)).ToList();
-                foreach (var farmer in farmers)
-                {
-                    AvailableFarmers.Remove(farmer);
-                }
-                return farmers;
-            }
-        }
-
-        public List<Lumberjack> GetLumberjacks(params Guid[] ids)
-        {
-            lock (Lock)
-            {
-                var lumberjacks = AvailableLumberjacks.Where(x => ids.Contains(x.Id)).ToList();
-                foreach (var lumberjack in lumberjacks)
-                {
-                    AvailableLumberjacks.Remove(lumberjack);
-                }
-                return lumberjacks;
+                var workers = AvailableWorkers.Where(x => workerIds.Contains(x.Id)).ToList();
+                foreach (var worker in workers) AvailableWorkers.Remove(worker);
+                return workers;
             }
         }
 
@@ -78,7 +32,7 @@ namespace Game.Model.Buildings.Settlement
         {
             lock (Lock)
             {
-                return AvailableMiners.Count + AvailableFarmers.Count + AvailableLumberjacks.Count;
+                return AvailableWorkers.Count;
             }
         }
     }

@@ -9,7 +9,14 @@ namespace Game.Model.Buildings
     {
         public int Level { get; protected set; }
         public List<T> Workers { get; } = new List<T>();
-        public int NumberOfWorkers => Workers.Count;
+
+        public int NumberOfWorkers()
+        {
+            lock (Lock)
+            {
+                return Workers.Count;
+            }
+        }
 
         public void AddWorker(T worker)
         {

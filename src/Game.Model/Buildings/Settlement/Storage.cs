@@ -28,12 +28,10 @@ namespace Game.Model.Buildings.Settlement
 
         public List<Carrier> GetCarriers(params Guid[] ids)
         {
-            lock (Lock) {
+            lock (Lock)
+            {
                 var carriers = Carriers.Where(x => ids.Contains(x.Id)).ToList();
-                foreach (var carrier in carriers)
-                {
-                    Carriers.Remove(carrier);
-                }
+                foreach (var carrier in carriers) Carriers.Remove(carrier);
 
                 return carriers;
             }
@@ -64,17 +62,6 @@ namespace Game.Model.Buildings.Settlement
             }
         }
 
-        public bool Consume(Resource resource)
-        {
-            lock (Lock)
-            {
-                var storageResource = GetResource(resource);
-                if (storageResource.Quantity < resource.Quantity) return false;
-                storageResource.Quantity -= resource.Quantity;
-                return true;
-            }
-        }
-
         public bool Consume(List<Resource> resources)
         {
             if (!CanAfford(resources)) return false;
@@ -83,7 +70,6 @@ namespace Game.Model.Buildings.Settlement
                 foreach (var resource in resources)
                 {
                     var storageResource = GetResource(resource);
-                    if (storageResource.Quantity < resource.Quantity) return false;
                     storageResource.Quantity -= resource.Quantity;
                 }
                 return true;

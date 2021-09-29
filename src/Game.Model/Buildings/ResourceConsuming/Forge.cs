@@ -21,7 +21,7 @@ namespace Game.Model.Buildings.ResourceConsuming
             _toolFactoryService = toolFactoryService;
         }
 
-        public List<Tool> Tools { get; set; } = new List<Tool>();
+        public List<Tool> Tools { get; } = new List<Tool>();
 
         public async Task<bool> CraftHammer(int level)
         {
@@ -84,13 +84,25 @@ namespace Game.Model.Buildings.ResourceConsuming
             lock (Lock)
             {
                 var tool = Tools.FirstOrDefault(x => x.Id == id );
+                if (tool != null)
+                    Tools.Remove(tool);
                 return tool;
+            }
+        }
+
+        public void AddTool(Tool tool)
+        {
+            lock (Lock)
+            {
+                Tools.Add(tool);
             }
         }
 
         private int CraftingTime()
         {
-            return ExecutionTimes.ToolCraftingTime - Workers.Sum(x => x.TotalCraftingSpeedRecution());
+            lock (Lock) { 
+                return ExecutionTimes.ToolCraftingTime - Workers.Sum(x => x.TotalCraftingSpeedRecution());
+            }
         }
     }
 }
