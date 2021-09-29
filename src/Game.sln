@@ -9,9 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Game.Model", "Game.Model\Ga
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Game.Model.Tests", "Game.Model.Tests\Game.Model.Tests.csproj", "{2B0F6905-7C56-4548-90D8-213F46E714C6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Game.ApplicationService", "Game.ApplicationService\Game.ApplicationService.csproj", "{13E80CC1-E748-4364-91C5-1DD6C2E9D52E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Game.Application", "Game.Application\Game.Application.csproj", "{13E80CC1-E748-4364-91C5-1DD6C2E9D52E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Game.ApplicationService.Tests", "Game.ApplicationService.Tests\Game.ApplicationService.Tests.csproj", "{A9A6A7CB-7F14-41E5-9DCE-C47277B8B1ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Game.Application.Tests", "Game.Application.Tests\Game.Application.Tests.csproj", "{A9A6A7CB-7F14-41E5-9DCE-C47277B8B1ED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
