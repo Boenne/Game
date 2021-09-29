@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Game.Model.Buildings.Settlement;
 using Game.Model.Workers.ResourceProducing;
 using Shouldly;
@@ -16,22 +17,7 @@ namespace Game.Model.Tests.Buildings.Settlement
 
             keep.AddWorker(miner);
 
-            keep.AvailableWorkers.Count.ShouldBe(1);
-        }
-
-        [Fact]
-        public void GetWorkers_RemovesWorkersFromList()
-        {
-            var keep = new Keep();
-            var miner = new Miner(1, 0);
-            var miner2 = new Miner(1, 0);
-            keep.AddWorker(miner);
-            keep.AddWorker(miner2);
-
-            var workers = keep.GetWorkers(miner.Id, miner2.Id);
-
-            workers.Count.ShouldBe(2);
-            keep.AvailableWorkers.ShouldBeEmpty();
+            keep.AvailableWorkers.First().ShouldBe(miner);
         }
 
         [Fact]
@@ -47,6 +33,21 @@ namespace Game.Model.Tests.Buildings.Settlement
 
             workers.ShouldBeEmpty();
             keep.AvailableWorkers.Count.ShouldBe(2);
+        }
+
+        [Fact]
+        public void GetWorkers_RemovesWorkersFromList()
+        {
+            var keep = new Keep();
+            var miner = new Miner(1, 0);
+            var miner2 = new Miner(1, 0);
+            keep.AddWorker(miner);
+            keep.AddWorker(miner2);
+
+            var workers = keep.GetWorkers(miner.Id, miner2.Id);
+
+            workers.Count.ShouldBe(2);
+            keep.AvailableWorkers.ShouldBeEmpty();
         }
 
         [Fact]

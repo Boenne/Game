@@ -12,6 +12,14 @@ namespace Game.Model.Buildings.Settings.Costs
                 new Stone {Quantity = 100},
                 new Lumber {Quantity = 100}
             };
+
+            public static List<Resource> GetCosts(int level)
+            {
+                switch (level)
+                {
+                    default: return Level1;
+                }
+            }
         }
 
         public sealed class Farm
@@ -21,6 +29,14 @@ namespace Game.Model.Buildings.Settings.Costs
                 new Stone {Quantity = 50},
                 new Lumber {Quantity = 50}
             };
+
+            public static List<Resource> GetCosts(int level)
+            {
+                switch (level)
+                {
+                    default: return Level1;
+                }
+            }
         }
 
         public sealed class Lumberyard
@@ -29,6 +45,14 @@ namespace Game.Model.Buildings.Settings.Costs
             {
                 new Stone {Quantity = 50},
             };
+
+            public static List<Resource> GetCosts(int level)
+            {
+                switch (level)
+                {
+                    default: return Level1;
+                }
+            }
         }
 
         public sealed class Quarry
@@ -37,6 +61,14 @@ namespace Game.Model.Buildings.Settings.Costs
             {
                 new Lumber {Quantity = 50},
             };
+
+            public static List<Resource> GetCosts(int level)
+            {
+                switch (level)
+                {
+                    default: return Level1;
+                }
+            }
         }
     }
 }

@@ -6,6 +6,8 @@ using Game.Model.Buildings.ResourceConsuming;
 using Game.Model.Buildings.ResourceProducing;
 using Game.Model.Buildings.Settings.Costs;
 using Game.Model.Factories;
+using Game.Model.Maps;
+using Game.Model.Resources;
 using Game.Model.Workers;
 using Game.Model.Workers.Settings.Costs;
 
@@ -15,14 +17,17 @@ namespace Game.Model.Buildings.Settlement
     {
         private readonly IWorkerFactoryService _workerFactoryService;
         private readonly IBuildingFactoryService _buildingFactoryService;
+        private readonly Map _map;
 
         public Settlement(int maximumNumberOfWorkers, int numberOfCarriers, int carrierResourceLimit,
             IToolFactoryService toolFactoryService, 
             IWorkerFactoryService workerFactoryService,
-            IBuildingFactoryService buildingFactoryService)
+            IBuildingFactoryService buildingFactoryService,
+            Map map)
         {
             _workerFactoryService = workerFactoryService;
             _buildingFactoryService = buildingFactoryService;
+            _map = map;
             MaximumNumberOfWorkers = maximumNumberOfWorkers;
             Keep = new Keep();
             Storage = new Storage(numberOfCarriers, carrierResourceLimit);
@@ -62,60 +67,69 @@ namespace Game.Model.Buildings.Settlement
             }
         }
 
-        public async Task BuildCopperMine(int level)
+        public async Task BuildCopperMine(int level, ResourceSite resourceSite)
         {
-            if (level == 1)
-                if (Storage.Consume(BuildingCosts.CopperMine.Level1))
+            if (resourceSite.ResourceType != typeof(Copper)) return;
+            if (Storage.Consume(BuildingCosts.CopperMine.GetCosts(level)))
+            {
+                var copperMine = _buildingFactoryService.CreateCopperMine(level, resourceSite.AvailableResources);
+                await Task.Delay(ExecutionTimes.BuildTime);
+                lock (Lock)
                 {
-                    var copperMine = _buildingFactoryService.CreateCopperMine(level);
-                    await Task.Delay(ExecutionTimes.BuildTime);
-                    lock (Lock)
-                    {
-                        CopperMines.Add(copperMine);
-                    }
+                    CopperMines.Add(copperMine);
                 }
+
+                var coordinates = _map.GetPosition(resourceSite.Id);
+                _map.ReplaceLocation(coordinates, copperMine);
+            }
         }
 
-        public async Task BuildFarm(int level)
+        public async Task BuildFarm(int level, ResourceSite resourceSite)
         {
-            if (level == 1)
-                if (Storage.Consume(BuildingCosts.Farm.Level1))
+            if (Storage.Consume(BuildingCosts.Farm.GetCosts(level)))
+            {
+                var farm = _buildingFactoryService.CreateFarm(level, resourceSite.AvailableResources);
+                await Task.Delay(ExecutionTimes.BuildTime);
+                lock (Lock)
                 {
-                    var farm = _buildingFactoryService.CreateFarm(level);
-                    await Task.Delay(ExecutionTimes.BuildTime);
-                    lock (Lock)
-                    {
-                        Farms.Add(farm);
-                    }
+                    Farms.Add(farm);
                 }
+
+                var coordinates = _map.GetPosition(resourceSite.Id);
+                _map.ReplaceLocation(coordinates, farm);
+            }
         }
 
-        public async Task BuildQuarry(int level)
+        public async Task BuildQuarry(int level, ResourceSite resourceSite)
         {
-            if (level == 1)
-                if (Storage.Consume(BuildingCosts.Quarry.Level1))
+            if (Storage.Consume(BuildingCosts.Quarry.GetCosts(level)))
+            {
+                var quarry = _buildingFactoryService.CreateQuarry(level, resourceSite.AvailableResources);
+                await Task.Delay(ExecutionTimes.BuildTime);
+                lock (Lock)
                 {
-                    var quarry = _buildingFactoryService.CreateQuarry(level);
-                    await Task.Delay(ExecutionTimes.BuildTime);
-                    lock (Lock)
-                    {
-                        Quarries.Add(quarry);
-                    }
+                    Quarries.Add(quarry);
                 }
+
+                var coordinates = _map.GetPosition(resourceSite.Id);
+                _map.ReplaceLocation(coordinates, quarry);
+            }
         }
 
-        public async Task BuildLumberyard(int level)
+        public async Task BuildLumberyard(int level, ResourceSite resourceSite)
         {
-            if (level == 1)
-                if (Storage.Consume(BuildingCosts.Lumberyard.Level1))
+            if (Storage.Consume(BuildingCosts.Lumberyard.GetCosts(level)))
+            {
+                var lumberyard = _buildingFactoryService.CreateLumberyard(level, resourceSite.AvailableResources);
+                await Task.Delay(ExecutionTimes.BuildTime);
+                lock (Lock)
                 {
-                    var lumberyard = _buildingFactoryService.CreateLumberyard(level);
-                    await Task.Delay(ExecutionTimes.BuildTime);
-                    lock (Lock)
-                    {
-                        Lumberyards.Add(lumberyard);
-                    }
+                    Lumberyards.Add(lumberyard);
                 }
+
+                var coordinates = _map.GetPosition(resourceSite.Id);
+                _map.ReplaceLocation(coordinates, lumberyard);
+            }
         }
 
         public async Task SendCarriersToBuilding(IResourceProducingBuilding building,

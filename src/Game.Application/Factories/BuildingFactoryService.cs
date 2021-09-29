@@ -2,32 +2,28 @@
 using Game.Model.Buildings.Settings.Specifications;
 using Game.Model.Factories;
 
-namespace Game.ApplicationService.Factories
+namespace Game.Application.Factories
 {
     public class BuildingFactoryService : IBuildingFactoryService
     {
-        public CopperMine CreateCopperMine(int level)
+        public CopperMine CreateCopperMine(int level, int availableResources)
         {
-            var specifications = GetSpecifications(level);
-            return new CopperMine(level, specifications.AvailableResources);
+            return new CopperMine(level, availableResources);
         }
 
-        public Lumberyard CreateLumberyard(int level)
+        public Lumberyard CreateLumberyard(int level, int availableResources)
         {
-            var specifications = GetSpecifications(level);
-            return new Lumberyard(level, specifications.AvailableResources);
+            return new Lumberyard(level, availableResources);
         }
 
-        public Farm CreateFarm(int level)
+        public Farm CreateFarm(int level, int availableResources)
         {
-            var specifications = GetSpecifications(level);
-            return new Farm(level, specifications.AvailableResources);
+            return new Farm(level, availableResources);
         }
 
-        public Quarry CreateQuarry(int level)
+        public Quarry CreateQuarry(int level, int availableResources)
         {
-            var specifications = GetSpecifications(level);
-            return new Quarry(level, specifications.AvailableResources);
+            return new Quarry(level, availableResources);
         }
 
         private static ResourceProducingBuildingSpecification GetSpecifications(int level)

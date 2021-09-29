@@ -9,7 +9,7 @@ namespace Game.Model
             Id = Guid.NewGuid();
         }
 
-        public Guid Id { get; }
+        public Guid Id { get; protected set; }
 
         protected static readonly object Lock = new object();
     }

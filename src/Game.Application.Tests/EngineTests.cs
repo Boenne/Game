@@ -10,7 +10,7 @@ using Moq;
 using Shouldly;
 using Xunit;
 
-namespace Game.ApplicationService.Tests
+namespace Game.Application.Tests
 {
     public class EngineTests
     {

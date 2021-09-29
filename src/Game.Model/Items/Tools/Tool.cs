@@ -16,7 +16,16 @@ namespace Game.Model.Items.Tools
         public Tool Copy()
         {
             var instance = Activator.CreateInstance(GetType(), Name, Modifier, Level);
-            return (Tool) instance;
+            var tool = (Tool)instance;
+            tool.Id = Id;
+            return tool;
+        }
+
+        public override bool Equals(object? obj)
+        {
+            var tool = obj as Tool;
+            if (tool == null) return false;
+            return tool.Id == Id;
         }
     }
 }

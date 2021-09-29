@@ -1,16 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using Game.ApplicationService.Factories;
+﻿using System.Threading.Tasks;
 using Game.Model;
-using Game.Model.Buildings;
-using Game.Model.Buildings.ResourceProducing;
-using Game.Model.Buildings.Settings.Costs;
 using Game.Model.Buildings.Settlement;
 using Game.Model.Factories;
-using Game.Model.Workers.ResourceProducing;
-using Game.Model.Workers.Settings.Costs;
 
-namespace Game.ApplicationService
+namespace Game.Application
 {
     public class Engine
     {

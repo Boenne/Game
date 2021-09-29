@@ -2,7 +2,7 @@
 using Game.Model.Workers.ResourceProducing;
 using Game.Model.Workers.Settings.Specifications;
 
-namespace Game.ApplicationService.Factories
+namespace Game.Application.Factories
 {
     public class WorkerFactoryService : IWorkerFactoryService
     {

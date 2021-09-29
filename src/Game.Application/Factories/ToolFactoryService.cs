@@ -2,7 +2,7 @@
 using Game.Model.Items.Settings.Specifications;
 using Game.Model.Items.Tools;
 
-namespace Game.ApplicationService.Factories
+namespace Game.Application.Factories
 {
     public class ToolFactoryService : IToolFactoryService
     {
