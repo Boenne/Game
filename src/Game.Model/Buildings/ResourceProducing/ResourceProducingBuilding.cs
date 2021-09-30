@@ -65,5 +65,13 @@ namespace Game.Model.Buildings.ResourceProducing
                 CarriersGoingBackToStorage.Remove(carrier);
             }
         }
+
+        public void UpgradeCarrier(int newCarrierResourceLimit)
+        {
+            lock (Lock)
+            {
+                CarriersGoingBackToStorage.ForEach(x => x.Upgrade(newCarrierResourceLimit));
+            }
+        }
     }
 }

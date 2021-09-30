@@ -6,5 +6,8 @@ namespace Game.Model.Buildings.ResourceProducing
     {
         void LoadCarrier(Carrier carrier);
         void CarrierArrivedAtStorage(Carrier carrier);
+        void UpgradeCarrier(int newCarrierResourceLimit);
+        void Produce();
+        int NumberOfWorkers();
     }
 }

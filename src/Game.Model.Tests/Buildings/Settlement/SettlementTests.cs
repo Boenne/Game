@@ -48,7 +48,7 @@ namespace Game.Model.Tests.Buildings.Settlement
 
             await settlement.BuildCopperMine(1, resourceSite);
 
-            settlement.CopperMines.First().ShouldBe(copperMine);
+            settlement.Buildings.First().ShouldBe(copperMine);
             map.GetPosition(copperMine.Id).ShouldBe(coordinates);
             _buildingFactoryService.Verify(x => x.CreateCopperMine(1, 10), Times.Once);
         }
@@ -64,7 +64,7 @@ namespace Game.Model.Tests.Buildings.Settlement
 
             await settlement.BuildCopperMine(1, resourceSite);
 
-            settlement.CopperMines.ShouldBeEmpty();
+            settlement.Buildings.ShouldBeEmpty();
             _buildingFactoryService.Verify(x => x.CreateCopperMine(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
         }
 
@@ -82,7 +82,7 @@ namespace Game.Model.Tests.Buildings.Settlement
 
             await settlement.BuildFarm(1, resourceSite);
 
-            settlement.Farms.First().ShouldBe(farm);
+            settlement.Buildings.First().ShouldBe(farm);
             map.GetPosition(farm.Id).ShouldBe(coordinates);
             _buildingFactoryService.Verify(x => x.CreateFarm(1, 10), Times.Once);
         }
@@ -98,7 +98,7 @@ namespace Game.Model.Tests.Buildings.Settlement
 
             await settlement.BuildFarm(1, resourceSite);
 
-            settlement.Farms.ShouldBeEmpty();
+            settlement.Buildings.ShouldBeEmpty();
             _buildingFactoryService.Verify(x => x.CreateFarm(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
         }
 
@@ -116,7 +116,7 @@ namespace Game.Model.Tests.Buildings.Settlement
 
             await settlement.BuildLumberyard(1, resourceSite);
 
-            settlement.Lumberyards.First().ShouldBe(lumberyard);
+            settlement.Buildings.First().ShouldBe(lumberyard);
             map.GetPosition(lumberyard.Id).ShouldBe(coordinates);
             _buildingFactoryService.Verify(x => x.CreateLumberyard(1, 10), Times.Once);
         }
@@ -132,7 +132,7 @@ namespace Game.Model.Tests.Buildings.Settlement
 
             await settlement.BuildLumberyard(1, resourceSite);
 
-            settlement.Lumberyards.ShouldBeEmpty();
+            settlement.Buildings.ShouldBeEmpty();
             _buildingFactoryService.Verify(x => x.CreateLumberyard(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
         }
 
@@ -150,7 +150,7 @@ namespace Game.Model.Tests.Buildings.Settlement
 
             await settlement.BuildQuarry(1, resourceSite);
 
-            settlement.Quarries.First().ShouldBe(quarry);
+            settlement.Buildings.First().ShouldBe(quarry);
             map.GetPosition(quarry.Id).ShouldBe(coordinates);
             _buildingFactoryService.Verify(x => x.CreateQuarry(1, 10), Times.Once);
         }
@@ -166,7 +166,7 @@ namespace Game.Model.Tests.Buildings.Settlement
 
             await settlement.BuildQuarry(1, resourceSite);
 
-            settlement.Quarries.ShouldBeEmpty();
+            settlement.Buildings.ShouldBeEmpty();
             _buildingFactoryService.Verify(x => x.CreateQuarry(It.IsAny<int>(), It.IsAny<int>()), Times.Never);
         }
 
@@ -275,7 +275,7 @@ namespace Game.Model.Tests.Buildings.Settlement
             var settlement = GetSettlement();
             var copperMine = new CopperMine(1, 10);
             copperMine.AddWorker(new Miner(0, 10));
-            settlement.CopperMines.Add(copperMine);
+            settlement.Buildings.Add(copperMine);
             copperMine.Produce();
 
             await settlement.SendCarriersToBuilding(copperMine, Guid.Empty);
@@ -291,7 +291,7 @@ namespace Game.Model.Tests.Buildings.Settlement
             var settlement = GetSettlement();
             var copperMine = new CopperMine(1, 10);
             copperMine.AddWorker(new Miner(0, 10));
-            settlement.CopperMines.Add(copperMine);
+            settlement.Buildings.Add(copperMine);
             copperMine.Produce();
 
             await settlement.SendCarriersToBuilding(copperMine,

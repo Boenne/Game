@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Game.Model.Buildings.ResourceConsuming;
 using Game.Model.Buildings.ResourceProducing;
 using Game.Model.Buildings.Settings.Costs;
+using Game.Model.Buildings.Settings.Specifications;
 using Game.Model.Factories;
 using Game.Model.Maps;
 using Game.Model.Resources;
@@ -15,12 +16,12 @@ namespace Game.Model.Buildings.Settlement
 {
     public class Settlement : Identifiable
     {
-        private readonly IWorkerFactoryService _workerFactoryService;
         private readonly IBuildingFactoryService _buildingFactoryService;
         private readonly Map _map;
+        private readonly IWorkerFactoryService _workerFactoryService;
 
         public Settlement(int maximumNumberOfWorkers, int numberOfCarriers, int carrierResourceLimit,
-            IToolFactoryService toolFactoryService, 
+            IToolFactoryService toolFactoryService,
             IWorkerFactoryService workerFactoryService,
             IBuildingFactoryService buildingFactoryService,
             Map map)
@@ -34,11 +35,11 @@ namespace Game.Model.Buildings.Settlement
             Forge = new Forge(Storage, toolFactoryService);
         }
 
-        public int MaximumNumberOfWorkers { get; }
-        public List<CopperMine> CopperMines { get; set; } = new List<CopperMine>();
-        public List<Quarry> Quarries { get; set; } = new List<Quarry>();
-        public List<Lumberyard> Lumberyards { get; set; } = new List<Lumberyard>();
-        public List<Farm> Farms { get; set; } = new List<Farm>();
+        public int MaximumNumberOfWorkers { get; private set; }
+        public int Level { get; private set; }
+
+        public List<IResourceProducingBuilding> Buildings { get; set; } =
+            new List<IResourceProducingBuilding>();
 
         public Storage Storage { get; set; }
         public Keep Keep { get; set; }
@@ -48,10 +49,7 @@ namespace Game.Model.Buildings.Settlement
         {
             lock (Lock)
             {
-                foreach (var copperMine in CopperMines) copperMine.Produce();
-                foreach (var quarry in Quarries) quarry.Produce();
-                foreach (var farm in Farms) farm.Produce();
-                foreach (var lumberyard in Lumberyards) lumberyard.Produce();
+                Buildings.ForEach(x => x.Produce());
             }
         }
 
@@ -59,9 +57,7 @@ namespace Game.Model.Buildings.Settlement
         {
             lock (Lock)
             {
-                return MaximumNumberOfWorkers > CopperMines.Sum(x => x.NumberOfWorkers()) +
-                       Lumberyards.Sum(x => x.NumberOfWorkers()) +
-                       Farms.Sum(x => x.NumberOfWorkers()) +
+                return MaximumNumberOfWorkers > Buildings.Sum(x => x.NumberOfWorkers()) +
                        Forge.NumberOfWorkers() +
                        Keep.NumberOfIdleWorkers();
             }
@@ -73,63 +69,50 @@ namespace Game.Model.Buildings.Settlement
             if (Storage.Consume(BuildingCosts.CopperMine.GetCosts(level)))
             {
                 var copperMine = _buildingFactoryService.CreateCopperMine(level, resourceSite.AvailableResources);
-                await Task.Delay(ExecutionTimes.BuildTime);
-                lock (Lock)
-                {
-                    CopperMines.Add(copperMine);
-                }
-
-                var coordinates = _map.GetPosition(resourceSite.Id);
-                _map.ReplaceLocation(coordinates, copperMine);
+                await AddBuilding(copperMine, resourceSite);
             }
         }
 
         public async Task BuildFarm(int level, ResourceSite resourceSite)
         {
+            if (resourceSite.ResourceType != typeof(Food)) return;
             if (Storage.Consume(BuildingCosts.Farm.GetCosts(level)))
             {
                 var farm = _buildingFactoryService.CreateFarm(level, resourceSite.AvailableResources);
-                await Task.Delay(ExecutionTimes.BuildTime);
-                lock (Lock)
-                {
-                    Farms.Add(farm);
-                }
-
-                var coordinates = _map.GetPosition(resourceSite.Id);
-                _map.ReplaceLocation(coordinates, farm);
+                await AddBuilding(farm, resourceSite);
             }
         }
 
         public async Task BuildQuarry(int level, ResourceSite resourceSite)
         {
+            if (resourceSite.ResourceType != typeof(Stone)) return;
             if (Storage.Consume(BuildingCosts.Quarry.GetCosts(level)))
             {
                 var quarry = _buildingFactoryService.CreateQuarry(level, resourceSite.AvailableResources);
-                await Task.Delay(ExecutionTimes.BuildTime);
-                lock (Lock)
-                {
-                    Quarries.Add(quarry);
-                }
-
-                var coordinates = _map.GetPosition(resourceSite.Id);
-                _map.ReplaceLocation(coordinates, quarry);
+                await AddBuilding(quarry, resourceSite);
             }
         }
 
         public async Task BuildLumberyard(int level, ResourceSite resourceSite)
         {
+            if (resourceSite.ResourceType != typeof(Lumber)) return;
             if (Storage.Consume(BuildingCosts.Lumberyard.GetCosts(level)))
             {
                 var lumberyard = _buildingFactoryService.CreateLumberyard(level, resourceSite.AvailableResources);
-                await Task.Delay(ExecutionTimes.BuildTime);
-                lock (Lock)
-                {
-                    Lumberyards.Add(lumberyard);
-                }
-
-                var coordinates = _map.GetPosition(resourceSite.Id);
-                _map.ReplaceLocation(coordinates, lumberyard);
+                await AddBuilding(lumberyard, resourceSite);
             }
+        }
+
+        private async Task AddBuilding<T>(T building, ResourceSite resourceSite) where T : Identifiable
+        {
+            await Task.Delay(ExecutionTimes.BuildTime);
+            lock (Lock)
+            {
+                Buildings.Add((IResourceProducingBuilding) building);
+            }
+
+            var coordinates = _map.GetPosition(resourceSite.Id);
+            _map.ReplaceLocation(coordinates, building);
         }
 
         public async Task SendCarriersToBuilding(IResourceProducingBuilding building,
@@ -190,20 +173,25 @@ namespace Game.Model.Buildings.Settlement
         {
             var workers = Keep.GetWorkers(workerIds);
             await Task.Delay(ExecutionTimes.WorkerTravelTime);
-            foreach (var worker in workers.Where(x => x.GetType() == typeof(T)))
-            {
-                building.AddWorker((T)worker);
-            }
+            foreach (var worker in workers.Where(x => x.GetType() == typeof(T))) building.AddWorker((T) worker);
         }
 
         public async Task MoveWorkersToKeep<T>(Building<T> building, params Guid[] workerIds) where T : Worker
         {
             var workers = building.RemoveWorker(workerIds);
             await Task.Delay(ExecutionTimes.WorkerTravelTime);
-            foreach (var worker in workers.Where(x => x.GetType() == typeof(T)))
-            {
-                Keep.AddWorker(worker);
-            }
+            foreach (var worker in workers.Where(x => x.GetType() == typeof(T))) Keep.AddWorker(worker);
+        }
+
+        public async Task Upgrade()
+        {
+            if (!Storage.Consume(BuildingCosts.Settlement.GetCosts(Level + 1))) return;
+            await Task.Delay(ExecutionTimes.SettlementUpgradeTime);
+            Level++;
+            var settlementSpecification = SettlementSpecifications.GetSpecifications(Level);
+            MaximumNumberOfWorkers = settlementSpecification.MaximumNumberOfWorkers;
+            Storage.Upgrade(settlementSpecification.NumberOfCarriers, settlementSpecification.MaximumNumberOfWorkers);
+            Buildings.ForEach(x => x.UpgradeCarrier(settlementSpecification.CarrierResourceLimit));
         }
 
         public void EquipWorkerTool(Guid toolId, Worker worker)

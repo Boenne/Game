@@ -2,6 +2,7 @@
 {
     public static class ExecutionTimes
     {
+        public static int SettlementUpgradeTime { get; set; }
         public static int BuildTime { get; set; }
         public static int TrainingTime { get; set; }
         public static int ResourceProductionTime { get; set; }

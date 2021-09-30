@@ -9,7 +9,7 @@ namespace Game.Model.Workers
             MaxResourceLimit = maxResourceLimit;
         }
 
-        public int MaxResourceLimit { get; }
+        public int MaxResourceLimit { get; private set; }
         public ResourceList Resources { get; private set; }
 
         public void Load(ResourceList resourceList)
@@ -22,6 +22,11 @@ namespace Game.Model.Workers
             var resources = Resources.Copy();
             Resources = null;
             return resources;
+        }
+
+        public void Upgrade(int maxResourceLimit)
+        {
+            MaxResourceLimit = maxResourceLimit;
         }
     }
 }
