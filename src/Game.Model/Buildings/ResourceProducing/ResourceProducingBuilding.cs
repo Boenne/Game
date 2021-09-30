@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Game.Model.Resources;
 using Game.Model.Workers;
@@ -41,21 +40,21 @@ namespace Game.Model.Buildings.ResourceProducing
 
         public void LoadCarrier(Carrier carrier)
         {
-            var resource = (TResource) Activator.CreateInstance(typeof(TResource), new object[] { });
             lock (Lock)
             {
+                var resourceList = new ResourceList();
                 if (ResourcesGathered >= carrier.MaxResourceLimit)
                 {
                     ResourcesGathered -= carrier.MaxResourceLimit;
-                    resource.Quantity = carrier.MaxResourceLimit;
+                    resourceList.Add(typeof(TResource), carrier.MaxResourceLimit);
                 }
                 else
                 {
-                    resource.Quantity = ResourcesGathered;
+                    resourceList.Add(typeof(TResource), ResourcesGathered);
                     ResourcesGathered = 0;
                 }
                 CarriersGoingBackToStorage.Add(carrier);
-                carrier.Load(resource);
+                carrier.Load(resourceList);
             }
         }
 

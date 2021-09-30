@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Game.Model.Resources;
+﻿using Game.Model.Resources;
 
 namespace Game.Model.Buildings.Settings.Costs
 {
@@ -7,13 +6,13 @@ namespace Game.Model.Buildings.Settings.Costs
     {
         public sealed class CopperMine
         {
-            public static List<Resource> Level1 = new List<Resource>
+            public static ResourceList Level1 = new ResourceList
             {
-                new Stone {Quantity = 100},
-                new Lumber {Quantity = 100}
+                {typeof(Stone), 100},
+                {typeof(Lumber), 100}
             };
 
-            public static List<Resource> GetCosts(int level)
+            public static ResourceList GetCosts(int level)
             {
                 switch (level)
                 {
@@ -24,13 +23,13 @@ namespace Game.Model.Buildings.Settings.Costs
 
         public sealed class Farm
         {
-            public static List<Resource> Level1 = new List<Resource>
+            public static ResourceList Level1 = new ResourceList
             {
-                new Stone {Quantity = 50},
-                new Lumber {Quantity = 50}
+                {typeof(Stone), 50},
+                {typeof(Lumber), 50}
             };
 
-            public static List<Resource> GetCosts(int level)
+            public static ResourceList GetCosts(int level)
             {
                 switch (level)
                 {
@@ -41,12 +40,12 @@ namespace Game.Model.Buildings.Settings.Costs
 
         public sealed class Lumberyard
         {
-            public static List<Resource> Level1 = new List<Resource>
+            public static ResourceList Level1 = new ResourceList
             {
-                new Stone {Quantity = 50},
+                {typeof(Stone), 50}
             };
 
-            public static List<Resource> GetCosts(int level)
+            public static ResourceList GetCosts(int level)
             {
                 switch (level)
                 {
@@ -57,12 +56,12 @@ namespace Game.Model.Buildings.Settings.Costs
 
         public sealed class Quarry
         {
-            public static List<Resource> Level1 = new List<Resource>
+            public static ResourceList Level1 = new ResourceList
             {
-                new Lumber {Quantity = 50},
+                {typeof(Lumber), 50}
             };
 
-            public static List<Resource> GetCosts(int level)
+            public static ResourceList GetCosts(int level)
             {
                 switch (level)
                 {

@@ -10,20 +10,18 @@ namespace Game.Model.Workers
         }
 
         public int MaxResourceLimit { get; }
-        public Resource Resource { get; private set; }
+        public ResourceList Resources { get; private set; }
 
-        public void Load(Resource resource)
+        public void Load(ResourceList resourceList)
         {
-            Resource = resource;
-            if (resource.Quantity > MaxResourceLimit)
-                Resource.Quantity = MaxResourceLimit;
+            Resources = resourceList;
         }
 
-        public int Unload()
+        public ResourceList Unload()
         {
-            var quantity = Resource.Quantity;
-            Resource = null;
-            return quantity;
+            var resources = Resources.Copy();
+            Resources = null;
+            return resources;
         }
     }
 }

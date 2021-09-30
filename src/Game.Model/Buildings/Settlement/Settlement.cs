@@ -136,7 +136,7 @@ namespace Game.Model.Buildings.Settlement
             params Guid[] carrierIds)
         {
             var carriers = Storage.GetCarriers(carrierIds);
-            if (carriers.Count == 0) return;
+            if (!carriers.Any()) return;
             foreach (var carrier in carriers)
             {
                 building.LoadCarrier(carrier);

@@ -67,8 +67,7 @@ namespace Game.Model.Tests.Buildings.ResourceConsuming
         {
             var hammer = new Hammer("", 0, 0);
             _toolFactoryService.Setup(x => x.CreateHammer(1)).Returns(hammer);
-            StartingResources.Stone = new Stone(10);
-            StartingResources.Lumber = new Lumber(10);
+            StartingResources.Resources = new ResourceList(new Lumber(10), new Stone(10));
             var storage = new Storage(0, 0);
             var forge = new Forge(storage, _toolFactoryService.Object);
 
@@ -82,7 +81,7 @@ namespace Game.Model.Tests.Buildings.ResourceConsuming
         [Fact]
         public async Task CraftHammer_NotEnoughResources_DoesNothing()
         {
-            StartingResources.Stone = new Stone(0);
+            StartingResources.Resources = ResourceList.CreateDefault();
             var storage = new Storage(0, 0);
             var forge = new Forge(storage, _toolFactoryService.Object);
 
@@ -97,8 +96,7 @@ namespace Game.Model.Tests.Buildings.ResourceConsuming
         {
             var pickaxe = new Pickaxe("", 0, 0);
             _toolFactoryService.Setup(x => x.CreatePickaxe(1)).Returns(pickaxe);
-            StartingResources.Stone = new Stone(10);
-            StartingResources.Lumber = new Lumber(10);
+            StartingResources.Resources = new ResourceList(new Lumber(10), new Stone(10));
             var storage = new Storage(0, 0);
             var forge = new Forge(storage, _toolFactoryService.Object);
 
@@ -112,7 +110,7 @@ namespace Game.Model.Tests.Buildings.ResourceConsuming
         [Fact]
         public async Task CraftPickaxe_NotEnoughResources_DoesNothing()
         {
-            StartingResources.Stone = new Stone(0);
+            StartingResources.Resources = ResourceList.CreateDefault();
             var storage = new Storage(0, 0);
             var forge = new Forge(storage, _toolFactoryService.Object);
 
@@ -127,8 +125,7 @@ namespace Game.Model.Tests.Buildings.ResourceConsuming
         {
             var hatchet = new Hatchet("", 0, 0);
             _toolFactoryService.Setup(x => x.CreateHatchet(1)).Returns(hatchet);
-            StartingResources.Stone = new Stone(10);
-            StartingResources.Lumber = new Lumber(10);
+            StartingResources.Resources = new ResourceList(new Lumber(10), new Stone(10));
             var storage = new Storage(0, 0);
             var forge = new Forge(storage, _toolFactoryService.Object);
 
@@ -142,7 +139,7 @@ namespace Game.Model.Tests.Buildings.ResourceConsuming
         [Fact]
         public async Task CraftHatchet_NotEnoughResources_DoesNothing()
         {
-            StartingResources.Stone = new Stone(0);
+            StartingResources.Resources = ResourceList.CreateDefault();
             var storage = new Storage(0, 0);
             var forge = new Forge(storage, _toolFactoryService.Object);
 
@@ -157,7 +154,7 @@ namespace Game.Model.Tests.Buildings.ResourceConsuming
         {
             var rake = new Rake("", 0, 0);
             _toolFactoryService.Setup(x => x.CreateRake(1)).Returns(rake);
-            StartingResources.Lumber = new Lumber(20);
+            StartingResources.Resources = new ResourceList(new Lumber(20));
             var storage = new Storage(0, 0);
             var forge = new Forge(storage, _toolFactoryService.Object);
 
@@ -171,7 +168,7 @@ namespace Game.Model.Tests.Buildings.ResourceConsuming
         [Fact]
         public async Task CraftRake_NotEnoughResources_DoesNothing()
         {
-            StartingResources.Lumber = new Lumber(0);
+            StartingResources.Resources = ResourceList.CreateDefault();
             var storage = new Storage(0, 0);
             var forge = new Forge(storage, _toolFactoryService.Object);
 

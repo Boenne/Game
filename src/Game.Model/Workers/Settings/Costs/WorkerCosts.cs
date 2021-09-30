@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Game.Model.Resources;
+﻿using Game.Model.Resources;
 
 namespace Game.Model.Workers.Settings.Costs
 {
@@ -7,17 +6,34 @@ namespace Game.Model.Workers.Settings.Costs
     {
         public sealed class Farmer
         {
-            public static List<Resource> Level1 = new List<Resource> {new Food(20)};
+            public static ResourceList Level1 = new ResourceList
+            {
+                {typeof(Food), 20}
+            };
         }
 
         public sealed class Lumberjack
         {
-            public static List<Resource> Level1 = new List<Resource> {new Food(20)};
+            public static ResourceList Level1 = new ResourceList
+            {
+                {typeof(Food), 20}
+            };
         }
 
         public sealed class Miner
         {
-            public static List<Resource> Level1 = new List<Resource> {new Food(20)};
+            public static ResourceList Level1 = new ResourceList
+            {
+                {typeof(Food), 20}
+            };
+        }
+
+        public sealed class Blacksmith
+        {
+            public static ResourceList Level1 = new ResourceList
+            {
+                {typeof(Food), 20}
+            };
         }
     }
 }

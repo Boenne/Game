@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Game.Model.Buildings.Settings;
 using Game.Model.Buildings.Settlement;
@@ -14,9 +13,9 @@ namespace Game.Model.Tests.Buildings.Settlement
     {
         [Theory]
         [InlineData(1)]
-        [InlineData(2)]
-        [InlineData(3)]
-        [InlineData(4)]
+        [InlineData(21)]
+        [InlineData(34)]
+        [InlineData(47)]
         public void Constructor_CreatesTheCorrectAmountOfCarriers(int numberOfCarriers)
         {
             var storage = new Storage(numberOfCarriers, 0);
@@ -27,11 +26,11 @@ namespace Game.Model.Tests.Buildings.Settlement
         [Fact]
         public void CanAfford_HasEnoughFood_NotEnoughLumber_ReturnsFalse()
         {
-            StartingResources.Food = new Food(10);
-            StartingResources.Lumber = new Lumber(10);
+            StartingResources.Resources = new ResourceList(new Food(10), new Lumber(10));
             var storage = new Storage(2, 10);
+            var resourcesToConsume = new ResourceList(new Food(10), new Lumber(15));
 
-            var canAfford = storage.CanAfford(new List<Resource> {new Food(10), new Lumber(15)});
+            var canAfford = storage.CanAfford(resourcesToConsume);
 
             canAfford.ShouldBeFalse();
         }
@@ -39,11 +38,11 @@ namespace Game.Model.Tests.Buildings.Settlement
         [Fact]
         public void CanAfford_HasEnoughResources_ReturnsTrue()
         {
-            StartingResources.Food = new Food(10);
-            StartingResources.Lumber = new Lumber(10);
+            StartingResources.Resources = new ResourceList(new Food(10), new Lumber(10));
             var storage = new Storage(2, 10);
+            var resourcesToConsume = new ResourceList(new Food(5), new Lumber(10));
 
-            var canAfford = storage.CanAfford(new List<Resource> {new Food(5), new Lumber(10)});
+            var canAfford = storage.CanAfford(resourcesToConsume);
 
             canAfford.ShouldBeTrue();
         }
@@ -51,25 +50,25 @@ namespace Game.Model.Tests.Buildings.Settlement
         [Fact]
         public void Consume_CanAfford_ConsumesResources()
         {
-            StartingResources.Food = new Food(10);
-            StartingResources.Lumber = new Lumber(10);
+            StartingResources.Resources = new ResourceList(new Food(10), new Lumber(10));
             var storage = new Storage(2, 10);
+            var resourcesToConsume = new ResourceList(new Food(10), new Lumber(10));
 
-            var wasConsumed = storage.Consume(new List<Resource> {new Food(10), new Lumber(10)});
+            var wasConsumed = storage.Consume(resourcesToConsume);
 
             wasConsumed.ShouldBeTrue();
-            storage.Food.Quantity.ShouldBe(0);
-            storage.Lumber.Quantity.ShouldBe(0);
+            storage.Resources[typeof(Food)].ShouldBe(0);
+            storage.Resources[typeof(Lumber)].ShouldBe(0);
         }
 
         [Fact]
         public void Consume_CannotAfford_ReturnsFalse()
         {
-            StartingResources.Food = new Food(10);
-            StartingResources.Lumber = new Lumber(10);
+            StartingResources.Resources = new ResourceList(new Food(10), new Lumber(10));
             var storage = new Storage(2, 10);
+            var resourcesToConsume = new ResourceList(new Food(10), new Lumber(15));
 
-            var wasConsumed = storage.Consume(new List<Resource> {new Food(10), new Lumber(15)});
+            var wasConsumed = storage.Consume(resourcesToConsume);
 
             wasConsumed.ShouldBeFalse();
         }
@@ -101,15 +100,15 @@ namespace Game.Model.Tests.Buildings.Settlement
         [Fact]
         public void UnloadCarrier_AddsQuantityToResource_AndAddsCarrierToList()
         {
-            StartingResources.Food = new Food(0);
+            StartingResources.Resources = ResourceList.CreateDefault();
             var storage = new Storage(2, 10);
             var carrier = new Carrier(10);
-            carrier.Load(new Food(10));
+            carrier.Load(new ResourceList(new Food(10)));
 
             storage.UnloadCarrier(carrier);
 
             storage.Carriers.Count.ShouldBe(3);
-            storage.Food.Quantity.ShouldBe(10);
+            storage.Resources[typeof(Food)].ShouldBe(10);
         }
     }
 }

@@ -4,6 +4,7 @@ using Game.Model.Buildings.ResourceProducing;
 using Game.Model.Buildings.Settings;
 using Game.Model.Buildings.Settlement;
 using Game.Model.Factories;
+using Game.Model.Maps;
 using Game.Model.Resources;
 using Game.Model.Workers.ResourceProducing;
 using Moq;
@@ -20,10 +21,13 @@ namespace Game.Application.Tests
             _workerFactoryService = new Mock<IWorkerFactoryService>();
             _toolFactoryService = new Mock<IToolFactoryService>();
             _engine = new Engine(_buildingFactoryService.Object, _workerFactoryService.Object);
-            StartingResources.Lumber = new Lumber(200);
-            StartingResources.Stone = new Stone(200);
+            StartingResources.Resources = new ResourceList
+            {
+                {typeof(Lumber), 200},
+                {typeof(Stone), 200}
+            };
             _settlement = new Settlement(2, 2, 2, _toolFactoryService.Object, _workerFactoryService.Object,
-                _buildingFactoryService.Object);
+                _buildingFactoryService.Object, new Map(1));
         }
 
         private readonly Engine _engine;
@@ -64,8 +68,6 @@ namespace Game.Application.Tests
         [Fact]
         public async Task StartResourceProduction_TimeForFiveRepetitions_WillProduceFiveResourcesForAllBuildings()
         {
-            StartingResources.Lumber = new Lumber(200);
-            StartingResources.Stone = new Stone(200);
             ExecutionTimes.ResourceProductionTime = 50;
 
             var copperMine = new CopperMine(1, 10);

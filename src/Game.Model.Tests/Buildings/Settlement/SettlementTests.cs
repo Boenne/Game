@@ -38,8 +38,7 @@ namespace Game.Model.Tests.Buildings.Settlement
         {
             var copperMine = new CopperMine(1, 0);
             _buildingFactoryService.Setup(x => x.CreateCopperMine(1, 10)).Returns(copperMine);
-            StartingResources.Lumber = new Lumber(100);
-            StartingResources.Stone = new Stone(100);
+            StartingResources.Resources = new ResourceList(new Lumber(100), new Stone(100));
             var map = new Map(2);
             var settlement = GetSettlement(map);
             var resourceSite = new ResourceSite(typeof(Copper), 10);
@@ -56,7 +55,7 @@ namespace Game.Model.Tests.Buildings.Settlement
         [Fact]
         public async Task BuildCopperMine_NoLumber_WillNotAdd()
         {
-            StartingResources.Lumber = new Lumber(0);
+            StartingResources.Resources = ResourceList.CreateDefault();
             var map = new Map(2);
             var settlement = GetSettlement(map);
             var resourceSite = new ResourceSite(typeof(Copper), 10);
@@ -73,8 +72,7 @@ namespace Game.Model.Tests.Buildings.Settlement
         {
             var farm = new Farm(1, 0);
             _buildingFactoryService.Setup(x => x.CreateFarm(1, 10)).Returns(farm);
-            StartingResources.Lumber = new Lumber(100);
-            StartingResources.Stone = new Stone(100);
+            StartingResources.Resources = new ResourceList(new Lumber(100), new Stone(100));
             var map = new Map(2);
             var settlement = GetSettlement(map);
             var resourceSite = new ResourceSite(typeof(Food), 10);
@@ -91,7 +89,7 @@ namespace Game.Model.Tests.Buildings.Settlement
         [Fact]
         public async Task BuildFarm_NoLumber_WillNotAdd()
         {
-            StartingResources.Lumber = new Lumber(0);
+            StartingResources.Resources = ResourceList.CreateDefault();
             var map = new Map(2);
             var settlement = GetSettlement(map);
             var resourceSite = new ResourceSite(typeof(Food), 10);
@@ -108,8 +106,7 @@ namespace Game.Model.Tests.Buildings.Settlement
         {
             var lumberyard = new Lumberyard(1, 0);
             _buildingFactoryService.Setup(x => x.CreateLumberyard(1, 10)).Returns(lumberyard);
-            StartingResources.Lumber = new Lumber(100);
-            StartingResources.Stone = new Stone(100);
+            StartingResources.Resources = new ResourceList(new Lumber(100), new Stone(100));
             var map = new Map(2);
             var settlement = GetSettlement(map);
             var resourceSite = new ResourceSite(typeof(Lumber), 10);
@@ -126,7 +123,7 @@ namespace Game.Model.Tests.Buildings.Settlement
         [Fact]
         public async Task BuildLumberyard_NoStone_WillNotAdd()
         {
-            StartingResources.Stone = new Stone(0);
+            StartingResources.Resources = ResourceList.CreateDefault();
             var map = new Map(2);
             var settlement = GetSettlement(map);
             var resourceSite = new ResourceSite(typeof(Lumber), 10);
@@ -143,8 +140,7 @@ namespace Game.Model.Tests.Buildings.Settlement
         {
             var quarry = new Quarry(1, 0);
             _buildingFactoryService.Setup(x => x.CreateQuarry(1, 10)).Returns(quarry);
-            StartingResources.Lumber = new Lumber(100);
-            StartingResources.Stone = new Stone(100);
+            StartingResources.Resources = new ResourceList(new Lumber(100), new Stone(100));
             var map = new Map(2);
             var settlement = GetSettlement(map);
             var resourceSite = new ResourceSite(typeof(Stone), 10);
@@ -161,7 +157,7 @@ namespace Game.Model.Tests.Buildings.Settlement
         [Fact]
         public async Task BuildQuarry_NoLumber_WillNotAdd()
         {
-            StartingResources.Lumber = new Lumber(0);
+            StartingResources.Resources = ResourceList.CreateDefault();
             var map = new Map(2);
             var settlement = GetSettlement(map);
             var resourceSite = new ResourceSite(typeof(Stone), 10);
@@ -274,6 +270,7 @@ namespace Game.Model.Tests.Buildings.Settlement
         [Fact]
         public async Task SendCarriersToBuilding_InvalidCarrierIds_DoesNothing()
         {
+            StartingResources.Resources = ResourceList.CreateDefault();
             var settlement = GetSettlement();
             var copperMine = new CopperMine(1, 10);
             copperMine.AddWorker(new Miner(0, 10));
@@ -283,7 +280,7 @@ namespace Game.Model.Tests.Buildings.Settlement
             await settlement.SendCarriersToBuilding(copperMine, Guid.Empty);
 
             copperMine.ResourcesGathered.ShouldBe(10);
-            settlement.Storage.Copper.Quantity.ShouldBe(0);
+            settlement.Storage.Resources[typeof(Copper)].ShouldBe(0);
             settlement.Storage.Carriers.Count.ShouldBe(2);
         }
 
@@ -300,7 +297,7 @@ namespace Game.Model.Tests.Buildings.Settlement
                 settlement.Storage.Carriers.Select(x => x.Id).ToArray());
 
             copperMine.ResourcesGathered.ShouldBe(6);
-            settlement.Storage.Copper.Quantity.ShouldBe(4);
+            settlement.Storage.Resources[typeof(Copper)].ShouldBe(4);
             settlement.Storage.Carriers.Count.ShouldBe(2);
         }
 
@@ -309,7 +306,7 @@ namespace Game.Model.Tests.Buildings.Settlement
         {
             var farmer = new Farmer(1, 0);
             _workerFactoryService.Setup(x => x.CreateFarmer(1)).Returns(farmer);
-            StartingResources.Food = new Food(100);
+            StartingResources.Resources = new ResourceList(new Food(100));
             var settlement = GetSettlement();
 
             await settlement.TrainFarmer(1);
@@ -321,7 +318,7 @@ namespace Game.Model.Tests.Buildings.Settlement
         [Fact]
         public async Task TrainFarmer_CanAfford_MaximumNumberOfWorkersReached_DoesNotAddFarmer()
         {
-            StartingResources.Food = new Food(100);
+            StartingResources.Resources = new ResourceList(new Food(100));
             var settlement = GetSettlement();
             settlement.Keep.AddWorker(new Miner(1, 0));
 
@@ -334,7 +331,7 @@ namespace Game.Model.Tests.Buildings.Settlement
         [Fact]
         public async Task TrainFarmer_CannotAfford_AndCanAddWorker_DoesNotAddFarmer()
         {
-            StartingResources.Food = new Food(0);
+            StartingResources.Resources = ResourceList.CreateDefault();
             var settlement = GetSettlement();
 
             await settlement.TrainFarmer(1);
@@ -348,7 +345,7 @@ namespace Game.Model.Tests.Buildings.Settlement
         {
             var lumberjack = new Lumberjack(1, 0);
             _workerFactoryService.Setup(x => x.CreateLumberjack(1)).Returns(lumberjack);
-            StartingResources.Food = new Food(100);
+            StartingResources.Resources = new ResourceList(new Food(100));
             var settlement = GetSettlement();
 
             await settlement.TrainLumberjack(1);
@@ -360,7 +357,7 @@ namespace Game.Model.Tests.Buildings.Settlement
         [Fact]
         public async Task TrainLumberjack_CanAfford_MaximumNumberOfWorkersReached_DoesNotAddLumberjack()
         {
-            StartingResources.Food = new Food(100);
+            StartingResources.Resources = new ResourceList(new Food(100));
             var settlement = GetSettlement();
             settlement.Keep.AddWorker(new Miner(1, 0));
 
@@ -373,7 +370,7 @@ namespace Game.Model.Tests.Buildings.Settlement
         [Fact]
         public async Task TrainLumberjack_CannotAfford_AndCanAddWorker_DoesNotAddLumberjack()
         {
-            StartingResources.Food = new Food(0);
+            StartingResources.Resources = ResourceList.CreateDefault();
             var settlement = GetSettlement();
 
             await settlement.TrainLumberjack(1);
@@ -387,7 +384,7 @@ namespace Game.Model.Tests.Buildings.Settlement
         {
             var miner = new Miner(1, 0);
             _workerFactoryService.Setup(x => x.CreateMiner(1)).Returns(miner);
-            StartingResources.Food = new Food(100);
+            StartingResources.Resources = new ResourceList(new Food(100));
             var settlement = GetSettlement();
 
             await settlement.TrainMiner(1);
@@ -399,7 +396,7 @@ namespace Game.Model.Tests.Buildings.Settlement
         [Fact]
         public async Task TrainMiner_CanAfford_MaximumNumberOfWorkersReached_DoesNotAddMiner()
         {
-            StartingResources.Food = new Food(100);
+            StartingResources.Resources = new ResourceList(new Food(100));
             var settlement = GetSettlement();
             settlement.Keep.AddWorker(new Farmer(1, 0));
 
@@ -412,7 +409,7 @@ namespace Game.Model.Tests.Buildings.Settlement
         [Fact]
         public async Task TrainMiner_CannotAfford_AndCanAddWorker_DoesNotAddMiner()
         {
-            StartingResources.Food = new Food(0);
+            StartingResources.Resources = ResourceList.CreateDefault();
             var settlement = GetSettlement();
 
             await settlement.TrainMiner(1);
