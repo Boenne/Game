@@ -7,6 +7,7 @@ using Game.Model.Factories;
 using Game.Model.Items.Tools;
 using Game.Model.Maps;
 using Game.Model.Resources;
+using Game.Model.Workers.ResourceConsuming;
 using Game.Model.Workers.ResourceProducing;
 using Moq;
 using Shouldly;
@@ -416,6 +417,45 @@ namespace Game.Model.Tests.Buildings.Settlement
 
             settlement.Keep.AvailableWorkers.ShouldBeEmpty();
             _workerFactoryService.Verify(x => x.CreateMiner(It.IsAny<int>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task TrainBlacksmith_CanAfford_AndCanAddWorker_AddsBlacksmith()
+        {
+            var blacksmith = new Blacksmith(1, 0);
+            _workerFactoryService.Setup(x => x.CreateBlacksmith(1)).Returns(blacksmith);
+            StartingResources.Resources = new ResourceList(new Food(100));
+            var settlement = GetSettlement();
+
+            await settlement.TrainBlacksmith(1);
+
+            settlement.Keep.AvailableWorkers.First().ShouldBe(blacksmith);
+            _workerFactoryService.Verify(x => x.CreateBlacksmith(1), Times.Once);
+        }
+
+        [Fact]
+        public async Task TrainBlacksmith_CanAfford_MaximumNumberOfWorkersReached_DoesNotAddBlacksmith()
+        {
+            StartingResources.Resources = new ResourceList(new Food(100));
+            var settlement = GetSettlement();
+            settlement.Keep.AddWorker(new Farmer(1, 0));
+
+            await settlement.TrainBlacksmith(1);
+
+            settlement.Keep.AvailableWorkers.Count.ShouldBe(1);
+            _workerFactoryService.Verify(x => x.CreateBlacksmith(It.IsAny<int>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task TrainBlacksmith_CannotAfford_AndCanAddWorker_DoesNotAddBlacksmith()
+        {
+            StartingResources.Resources = ResourceList.CreateDefault();
+            var settlement = GetSettlement();
+
+            await settlement.TrainBlacksmith(1);
+
+            settlement.Keep.AvailableWorkers.ShouldBeEmpty();
+            _workerFactoryService.Verify(x => x.CreateBlacksmith(It.IsAny<int>()), Times.Never);
         }
 
         [Fact]

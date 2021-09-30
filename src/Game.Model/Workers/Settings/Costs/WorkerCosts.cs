@@ -10,6 +10,14 @@ namespace Game.Model.Workers.Settings.Costs
             {
                 {typeof(Food), 20}
             };
+
+            public static ResourceList GetCosts(int level)
+            {
+                switch (level)
+                {
+                    default: return Level1;
+                }
+            }
         }
 
         public sealed class Lumberjack
@@ -18,6 +26,14 @@ namespace Game.Model.Workers.Settings.Costs
             {
                 {typeof(Food), 20}
             };
+
+            public static ResourceList GetCosts(int level)
+            {
+                switch (level)
+                {
+                    default: return Level1;
+                }
+            }
         }
 
         public sealed class Miner
@@ -26,6 +42,14 @@ namespace Game.Model.Workers.Settings.Costs
             {
                 {typeof(Food), 20}
             };
+
+            public static ResourceList GetCosts(int level)
+            {
+                switch (level)
+                {
+                    default: return Level1;
+                }
+            }
         }
 
         public sealed class Blacksmith
@@ -34,6 +58,14 @@ namespace Game.Model.Workers.Settings.Costs
             {
                 {typeof(Food), 20}
             };
+
+            public static ResourceList GetCosts(int level)
+            {
+                switch (level)
+                {
+                    default: return Level1;
+                }
+            }
         }
     }
 }

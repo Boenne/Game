@@ -148,35 +148,42 @@ namespace Game.Model.Buildings.Settlement
 
         public async Task TrainMiner(int level)
         {
-            if (level == 1)
-                if (CanAddWorker() && Storage.Consume(WorkerCosts.Miner.Level1))
-                {
-                    var miner = _workerFactoryService.CreateMiner(level);
-                    await Task.Delay(ExecutionTimes.TrainingTime);
-                    Keep.AddWorker(miner);
-                }
+            if (CanAddWorker() && Storage.Consume(WorkerCosts.Miner.GetCosts(level)))
+            {
+                var miner = _workerFactoryService.CreateMiner(level);
+                await Task.Delay(ExecutionTimes.TrainingTime);
+                Keep.AddWorker(miner);
+            }
         }
 
         public async Task TrainFarmer(int level)
         {
-            if (level == 1)
-                if (CanAddWorker() && Storage.Consume(WorkerCosts.Farmer.Level1))
-                {
-                    var farmer = _workerFactoryService.CreateFarmer(level);
-                    await Task.Delay(ExecutionTimes.TrainingTime);
-                    Keep.AddWorker(farmer);
-                }
+            if (CanAddWorker() && Storage.Consume(WorkerCosts.Farmer.GetCosts(level)))
+            {
+                var farmer = _workerFactoryService.CreateFarmer(level);
+                await Task.Delay(ExecutionTimes.TrainingTime);
+                Keep.AddWorker(farmer);
+            }
         }
 
         public async Task TrainLumberjack(int level)
         {
-            if (level == 1)
-                if (CanAddWorker() && Storage.Consume(WorkerCosts.Lumberjack.Level1))
-                {
-                    var lumberjack = _workerFactoryService.CreateLumberjack(level);
-                    await Task.Delay(ExecutionTimes.TrainingTime);
-                    Keep.AddWorker(lumberjack);
-                }
+            if (CanAddWorker() && Storage.Consume(WorkerCosts.Lumberjack.GetCosts(level)))
+            {
+                var lumberjack = _workerFactoryService.CreateLumberjack(level);
+                await Task.Delay(ExecutionTimes.TrainingTime);
+                Keep.AddWorker(lumberjack);
+            }
+        }
+
+        public async Task TrainBlacksmith(int level)
+        {
+            if (CanAddWorker() && Storage.Consume(WorkerCosts.Blacksmith.GetCosts(level)))
+            {
+                var blacksmith = _workerFactoryService.CreateBlacksmith(level);
+                await Task.Delay(ExecutionTimes.TrainingTime);
+                Keep.AddWorker(blacksmith);
+            }
         }
 
         public async Task MoveWorkersToBuilding<T>(Building<T> building, params Guid[] workerIds) where T : Worker

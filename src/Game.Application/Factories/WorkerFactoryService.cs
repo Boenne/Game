@@ -1,4 +1,5 @@
 ﻿using Game.Model.Factories;
+using Game.Model.Workers.ResourceConsuming;
 using Game.Model.Workers.ResourceProducing;
 using Game.Model.Workers.Settings.Specifications;
 
@@ -22,6 +23,12 @@ namespace Game.Application.Factories
         {
             var specifications = GetSpecifications(level);
             return new Lumberjack(level, specifications.OutputPerWorker);
+        }
+
+        public Blacksmith CreateBlacksmith(int level)
+        {
+            var specifications = GetSpecifications(level);
+            return new Blacksmith(level, specifications.OutputPerWorker);
         }
 
         private static ResourceProducingWorkerSpecification GetSpecifications(int level)

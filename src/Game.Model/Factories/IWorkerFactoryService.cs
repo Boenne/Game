@@ -1,4 +1,5 @@
-﻿using Game.Model.Workers.ResourceProducing;
+﻿using Game.Model.Workers.ResourceConsuming;
+using Game.Model.Workers.ResourceProducing;
 
 namespace Game.Model.Factories
 {
@@ -7,5 +8,6 @@ namespace Game.Model.Factories
         Farmer CreateFarmer(int level);
         Miner CreateMiner(int level);
         Lumberjack CreateLumberjack(int level);
+        Blacksmith CreateBlacksmith(int level);
     }
 }
