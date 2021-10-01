@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Game.Model.Buildings.MainBuildings;
 using Game.Model.Buildings.ResourceConsuming;
 using Game.Model.Buildings.Settings;
-using Game.Model.Buildings.Settlement;
 using Game.Model.Factories;
 using Game.Model.Items.Tools;
 using Game.Model.Resources;

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Game.Model.Buildings.Settlement;
+using Game.Model.Buildings.MainBuildings;
 using Game.Model.Factories;
 using Game.Model.Items.Settings.Costs;
 using Game.Model.Items.Tools;

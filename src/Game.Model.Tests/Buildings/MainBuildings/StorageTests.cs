@@ -1,13 +1,12 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
+using Game.Model.Buildings.MainBuildings;
 using Game.Model.Buildings.Settings;
-using Game.Model.Buildings.Settlement;
 using Game.Model.Resources;
 using Game.Model.Workers;
 using Shouldly;
 using Xunit;
 
-namespace Game.Model.Tests.Buildings.Settlement
+namespace Game.Model.Tests.Buildings.MainBuildings
 {
     public class StorageTests
     {

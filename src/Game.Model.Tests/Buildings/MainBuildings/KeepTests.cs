@@ -1,10 +1,10 @@
 ﻿using System.Linq;
-using Game.Model.Buildings.Settlement;
+using Game.Model.Buildings.MainBuildings;
 using Game.Model.Workers.ResourceProducing;
 using Shouldly;
 using Xunit;
 
-namespace Game.Model.Tests.Buildings.Settlement
+namespace Game.Model.Tests.Buildings.MainBuildings
 {
     public class KeepTests
     {

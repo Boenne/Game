@@ -2,7 +2,7 @@
 using System.Linq;
 using Game.Model.Workers;
 
-namespace Game.Model.Buildings.Settlement
+namespace Game.Model.Buildings.MainBuildings
 {
     public class Keep : Identifiable
     {

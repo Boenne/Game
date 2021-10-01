@@ -11,7 +11,7 @@ using Game.Model.Resources;
 using Game.Model.Workers;
 using Game.Model.Workers.Settings.Costs;
 
-namespace Game.Model.Buildings.Settlement
+namespace Game.Model.Buildings.MainBuildings
 {
     public class Settlement : Identifiable
     {

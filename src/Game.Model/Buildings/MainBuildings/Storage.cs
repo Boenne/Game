@@ -4,7 +4,7 @@ using Game.Model.Buildings.Settings;
 using Game.Model.Resources;
 using Game.Model.Workers;
 
-namespace Game.Model.Buildings.Settlement
+namespace Game.Model.Buildings.MainBuildings
 {
     public class Storage : Identifiable
     {

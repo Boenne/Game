@@ -6,6 +6,11 @@ namespace Game.Model.Resources
 {
     public class ResourceList : Dictionary<Type, int>
     {
+        public ResourceList()
+        {
+            
+        }
+
         public ResourceList(params Resource[] resources)
         {
             foreach (var resource in resources)

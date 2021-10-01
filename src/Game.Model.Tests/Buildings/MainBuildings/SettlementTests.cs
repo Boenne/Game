@@ -12,7 +12,7 @@ using Moq;
 using Shouldly;
 using Xunit;
 
-namespace Game.Model.Tests.Buildings.Settlement
+namespace Game.Model.Tests.Buildings.MainBuildings
 {
     public class SettlementTests
     {
@@ -27,9 +27,9 @@ namespace Game.Model.Tests.Buildings.Settlement
         private readonly Mock<IWorkerFactoryService> _workerFactoryService;
         private readonly Mock<IToolFactoryService> _toolFactoryService;
 
-        private Model.Buildings.Settlement.Settlement GetSettlement(Map map = null)
+        private Model.Buildings.MainBuildings.Settlement GetSettlement(Map map = null)
         {
-            return new Model.Buildings.Settlement.Settlement(1, 2, 2, _toolFactoryService.Object,
+            return new Model.Buildings.MainBuildings.Settlement(1, 2, 2, _toolFactoryService.Object,
                 _workerFactoryService.Object, _buildingFactoryService.Object, map ?? new Map(0));
         }
 
