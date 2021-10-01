@@ -4,12 +4,14 @@ namespace Game.Model
 {
     public abstract class Identifiable
     {
+        public Guid BaseId { get; set; }
+
         protected Identifiable()
         {
-            Id = Guid.NewGuid();
+            BaseId = Guid.NewGuid();
         }
 
-        public Guid Id { get; protected set; }
+        public Urn Id => $"urn:{GetType().Name}:{BaseId}";
 
         protected static readonly object Lock = new object();
     }

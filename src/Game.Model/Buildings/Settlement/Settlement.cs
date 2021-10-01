@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Game.Model.Buildings.ResourceConsuming;
@@ -116,7 +115,7 @@ namespace Game.Model.Buildings.Settlement
         }
 
         public async Task SendCarriersToBuilding(IResourceProducingBuilding building,
-            params Guid[] carrierIds)
+            params Urn[] carrierIds)
         {
             var carriers = Storage.GetCarriers(carrierIds);
             if (!carriers.Any()) return;
@@ -169,14 +168,14 @@ namespace Game.Model.Buildings.Settlement
             }
         }
 
-        public async Task MoveWorkersToBuilding<T>(Building<T> building, params Guid[] workerIds) where T : Worker
+        public async Task MoveWorkersToBuilding<T>(Building<T> building, params Urn[] workerIds) where T : Worker
         {
             var workers = Keep.GetWorkers(workerIds);
             await Task.Delay(ExecutionTimes.WorkerTravelTime);
             foreach (var worker in workers.Where(x => x.GetType() == typeof(T))) building.AddWorker((T) worker);
         }
 
-        public async Task MoveWorkersToKeep<T>(Building<T> building, params Guid[] workerIds) where T : Worker
+        public async Task MoveWorkersToKeep<T>(Building<T> building, params Urn[] workerIds) where T : Worker
         {
             var workers = building.RemoveWorker(workerIds);
             await Task.Delay(ExecutionTimes.WorkerTravelTime);
@@ -194,7 +193,7 @@ namespace Game.Model.Buildings.Settlement
             Buildings.ForEach(x => x.UpgradeCarrier(settlementSpecification.CarrierResourceLimit));
         }
 
-        public void EquipWorkerTool(Guid toolId, Worker worker)
+        public void EquipWorkerTool(Urn toolId, Worker worker)
         {
             var tool = Forge.GetTool(toolId);
             if (tool != null)

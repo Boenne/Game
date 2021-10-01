@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Game.Model.Buildings.Settlement;
 using Game.Model.Workers.ResourceProducing;
 using Shouldly;
@@ -29,7 +28,7 @@ namespace Game.Model.Tests.Buildings.Settlement
             keep.AddWorker(miner);
             keep.AddWorker(miner2);
 
-            var workers = keep.GetWorkers(Guid.Empty, Guid.Empty);
+            var workers = keep.GetWorkers(string.Empty, string.Empty);
 
             workers.ShouldBeEmpty();
             keep.AvailableWorkers.Count.ShouldBe(2);

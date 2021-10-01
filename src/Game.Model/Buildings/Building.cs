@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Game.Model.Workers;
 
@@ -26,7 +25,7 @@ namespace Game.Model.Buildings
             }
         }
 
-        public List<T> RemoveWorker(params Guid[] ids)
+        public List<T> RemoveWorker(params Urn[] ids)
         {
             lock (Lock)
             {

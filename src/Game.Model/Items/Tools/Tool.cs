@@ -17,7 +17,7 @@ namespace Game.Model.Items.Tools
         {
             var instance = Activator.CreateInstance(GetType(), Name, Modifier, Level);
             var tool = (Tool)instance;
-            tool.Id = Id;
+            tool.BaseId = BaseId;
             return tool;
         }
 
@@ -25,7 +25,7 @@ namespace Game.Model.Items.Tools
         {
             var tool = obj as Tool;
             if (tool == null) return false;
-            return tool.Id == Id;
+            return tool.BaseId == BaseId;
         }
     }
 }

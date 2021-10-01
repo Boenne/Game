@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Game.Model.Buildings.Settings;
 using Game.Model.Resources;
@@ -21,7 +20,7 @@ namespace Game.Model.Buildings.Settlement
         public List<Carrier> Carriers { get; }
         private int _numberOfCarriers;
 
-        public List<Carrier> GetCarriers(params Guid[] ids)
+        public List<Carrier> GetCarriers(params Urn[] ids)
         {
             lock (Lock)
             {
@@ -66,6 +65,7 @@ namespace Game.Model.Buildings.Settlement
             {
                 Carriers.ForEach(x => x.Upgrade(newCarrierResourceLimit));
                 Carriers.AddRange(Enumerable.Range(0, newNumberOfCarriers - _numberOfCarriers).Select(x => new Carrier(newCarrierResourceLimit)));
+                _numberOfCarriers = newCarrierResourceLimit;
             }
         }
     }

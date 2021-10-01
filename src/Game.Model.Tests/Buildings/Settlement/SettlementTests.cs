@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Game.Model.Buildings.ResourceProducing;
 using Game.Model.Buildings.Settings;
@@ -191,7 +190,7 @@ namespace Game.Model.Tests.Buildings.Settlement
             var pickaxe = new Pickaxe("", 0, 1);
             settlement.Forge.Tools.Add(pickaxe);
 
-            settlement.EquipWorkerTool(Guid.Empty, miner);
+            settlement.EquipWorkerTool(string.Empty, miner);
 
             miner.Tool.ShouldBeNull();
         }
@@ -216,7 +215,7 @@ namespace Game.Model.Tests.Buildings.Settlement
             var quarry = new Quarry(1, 0);
             quarry.AddWorker(miner);
 
-            await settlement.MoveWorkersToKeep(quarry, Guid.Empty);
+            await settlement.MoveWorkersToKeep(quarry, string.Empty);
 
             settlement.Keep.AvailableWorkers.ShouldBeEmpty();
             quarry.NumberOfWorkers().ShouldBe(1);
@@ -230,7 +229,7 @@ namespace Game.Model.Tests.Buildings.Settlement
             var quarry = new Quarry(1, 0);
             settlement.Keep.AddWorker(miner);
 
-            await settlement.MoveWorkersToBuilding(quarry, Guid.Empty);
+            await settlement.MoveWorkersToBuilding(quarry, string.Empty);
 
             settlement.Keep.AvailableWorkers.Count.ShouldBe(1);
             quarry.NumberOfWorkers().ShouldBe(0);
@@ -278,7 +277,7 @@ namespace Game.Model.Tests.Buildings.Settlement
             settlement.Buildings.Add(copperMine);
             copperMine.Produce();
 
-            await settlement.SendCarriersToBuilding(copperMine, Guid.Empty);
+            await settlement.SendCarriersToBuilding(copperMine, string.Empty);
 
             copperMine.ResourcesGathered.ShouldBe(10);
             settlement.Storage.Resources[typeof(Copper)].ShouldBe(0);

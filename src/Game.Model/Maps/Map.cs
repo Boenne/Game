@@ -5,16 +5,16 @@ namespace Game.Model.Maps
     public class Map
     {
         private static readonly object Lock = new object();
-        private readonly MapPoint[,] _map;
+        private readonly Urn[,] _map;
         private readonly int _mapSize;
 
         public Map(int size)
         {
             _mapSize = size;
-            _map = new MapPoint[_mapSize, _mapSize];
+            _map = new Urn[_mapSize, _mapSize];
         }
 
-        public Coordinates GetPosition(Guid id)
+        public Coordinates GetPosition(Urn id)
         {
             lock (Lock)
             {
@@ -22,7 +22,7 @@ namespace Game.Model.Maps
                 for (var y = 0; y < _mapSize; y++)
                 {
                     var mapPoint = _map[x, y];
-                    if (mapPoint != null && mapPoint.Object.Id == id) return new Coordinates(x, y);
+                    if (mapPoint != null && Equals(mapPoint, id)) return new Coordinates(x, y);
                 }
 
                 return null;
@@ -42,7 +42,7 @@ namespace Game.Model.Maps
             if (!IsLocationAvailable(coordinates)) return false;
             lock (Lock)
             {
-                _map[coordinates.X, coordinates.Y] = new MapPoint(objectOnMap);
+                _map[coordinates.X, coordinates.Y] = objectOnMap.Id;
                 return true;
             }
         }
@@ -51,7 +51,7 @@ namespace Game.Model.Maps
         {
             lock (Lock)
             {
-                _map[coordinates.X, coordinates.Y] = new MapPoint(objectOnMap);
+                _map[coordinates.X, coordinates.Y] = objectOnMap.Id;
                 return true;
             }
         }

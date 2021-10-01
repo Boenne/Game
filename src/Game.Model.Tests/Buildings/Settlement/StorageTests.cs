@@ -78,7 +78,7 @@ namespace Game.Model.Tests.Buildings.Settlement
         {
             var storage = new Storage(2, 0);
 
-            var carriers = storage.GetCarriers(Guid.Empty, Guid.Empty);
+            var carriers = storage.GetCarriers(string.Empty, string.Empty);
 
             carriers.ShouldBeEmpty();
             storage.Carriers.Count.ShouldBe(2);

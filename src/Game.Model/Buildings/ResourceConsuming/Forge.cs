@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Game.Model.Buildings.Settlement;
@@ -79,11 +78,11 @@ namespace Game.Model.Buildings.ResourceConsuming
             return true;
         }
 
-        public Tool GetTool(Guid id)
+        public Tool GetTool(Urn id)
         {
             lock (Lock)
             {
-                var tool = Tools.FirstOrDefault(x => x.Id == id );
+                var tool = Tools.FirstOrDefault(x => Equals(x.Id, id) );
                 if (tool != null)
                     Tools.Remove(tool);
                 return tool;

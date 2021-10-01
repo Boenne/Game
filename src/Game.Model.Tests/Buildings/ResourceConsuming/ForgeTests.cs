@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Game.Model.Buildings.ResourceConsuming;
 using Game.Model.Buildings.Settings;
@@ -56,7 +55,7 @@ namespace Game.Model.Tests.Buildings.ResourceConsuming
             var pickaxe = new Pickaxe("", 0, 0);
             forge.AddTool(pickaxe);
 
-            var tool = forge.GetTool(Guid.Empty);
+            var tool = forge.GetTool(string.Empty);
 
             tool.ShouldBeNull();
             forge.Tools.Count.ShouldBe(1);

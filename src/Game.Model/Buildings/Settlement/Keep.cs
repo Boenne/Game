@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Game.Model.Workers;
 
@@ -9,7 +8,6 @@ namespace Game.Model.Buildings.Settlement
     {
         public List<Worker> AvailableWorkers { get; } = new List<Worker>();
 
-
         public void AddWorker(Worker worker)
         {
             lock (Lock)
@@ -18,7 +16,7 @@ namespace Game.Model.Buildings.Settlement
             }
         }
 
-        public List<Worker> GetWorkers(params Guid[] workerIds)
+        public List<Worker> GetWorkers(params Urn[] workerIds)
         {
             lock (Lock)
             {
