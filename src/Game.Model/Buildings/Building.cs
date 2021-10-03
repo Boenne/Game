@@ -1,13 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Game.Model.Workers;
+using Newtonsoft.Json;
 
 namespace Game.Model.Buildings
 {
     public abstract class Building<T> : Identifiable where T : Worker
     {
-        public int Level { get; protected set; }
-        public List<T> Workers { get; } = new List<T>();
+        [JsonProperty] public int Level { get; protected set; }
+
+        [JsonProperty] public List<T> Workers { get; private set; } = new List<T>();
 
         public int NumberOfWorkers()
         {
@@ -30,10 +32,7 @@ namespace Game.Model.Buildings
             lock (Lock)
             {
                 var workers = Workers.Where(x => ids.Contains(x.Id)).ToList();
-                foreach (var worker in workers)
-                {
-                    Workers.Remove(worker);
-                }
+                foreach (var worker in workers) Workers.Remove(worker);
 
                 return workers;
             }

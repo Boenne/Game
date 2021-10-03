@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Game.Model.Workers;
+using Newtonsoft.Json;
 
 namespace Game.Model.Buildings.MainBuildings
 {
     public class Keep : Identifiable
     {
-        public List<Worker> AvailableWorkers { get; } = new List<Worker>();
+        [JsonProperty] public List<Worker> AvailableWorkers { get; private set; } = new List<Worker>();
 
         public void AddWorker(Worker worker)
         {

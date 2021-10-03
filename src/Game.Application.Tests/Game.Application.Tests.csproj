@@ -22,4 +22,10 @@
     <ProjectReference Include="..\Game.Application\Game.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="savedgame.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

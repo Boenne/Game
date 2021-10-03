@@ -10,13 +10,16 @@ using Game.Model.Maps;
 using Game.Model.Resources;
 using Game.Model.Workers;
 using Game.Model.Workers.Settings.Costs;
+using Newtonsoft.Json;
 
 namespace Game.Model.Buildings.MainBuildings
 {
     public class Settlement : Identifiable
     {
         private readonly IBuildingFactoryService _buildingFactoryService;
-        private readonly Map _map;
+
+        [JsonProperty] private readonly Map _map;
+
         private readonly IWorkerFactoryService _workerFactoryService;
 
         public Settlement(int maximumNumberOfWorkers, int numberOfCarriers, int carrierResourceLimit,
@@ -34,15 +37,23 @@ namespace Game.Model.Buildings.MainBuildings
             Forge = new Forge(Storage, toolFactoryService);
         }
 
-        public int MaximumNumberOfWorkers { get; private set; }
-        public int Level { get; private set; }
+        public Settlement()
+        {
+        }
 
-        public List<IResourceProducingBuilding> Buildings { get; set; } =
+        [JsonProperty] public int MaximumNumberOfWorkers { get; private set; }
+
+        [JsonProperty] public int Level { get; private set; }
+
+        [JsonProperty]
+        public List<IResourceProducingBuilding> Buildings { get; private set; } =
             new List<IResourceProducingBuilding>();
 
-        public Storage Storage { get; set; }
-        public Keep Keep { get; set; }
-        public Forge Forge { get; set; }
+        [JsonProperty] public Storage Storage { get; private set; }
+
+        [JsonProperty] public Keep Keep { get; private set; }
+
+        [JsonProperty] public Forge Forge { get; private set; }
 
         public void ProduceResources()
         {

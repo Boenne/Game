@@ -6,6 +6,7 @@ using Game.Model.Factories;
 using Game.Model.Items.Settings.Costs;
 using Game.Model.Items.Tools;
 using Game.Model.Workers.ResourceConsuming;
+using Newtonsoft.Json;
 
 namespace Game.Model.Buildings.ResourceConsuming
 {
@@ -20,7 +21,13 @@ namespace Game.Model.Buildings.ResourceConsuming
             _toolFactoryService = toolFactoryService;
         }
 
-        public List<Tool> Tools { get; } = new List<Tool>();
+        public Forge()
+        {
+            
+        }
+
+        [JsonProperty]
+        public List<Tool> Tools { get; private set; } = new List<Tool>();
 
         public async Task<bool> CraftHammer(int level)
         {

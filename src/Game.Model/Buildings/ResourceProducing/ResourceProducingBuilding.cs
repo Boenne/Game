@@ -3,6 +3,7 @@ using System.Linq;
 using Game.Model.Resources;
 using Game.Model.Workers;
 using Game.Model.Workers.ResourceProducing;
+using Newtonsoft.Json;
 
 namespace Game.Model.Buildings.ResourceProducing
 {
@@ -16,7 +17,8 @@ namespace Game.Model.Buildings.ResourceProducing
         }
 
         public int AvailableResources { get; private set; }
-        public int ResourcesGathered { get; private set; }
+
+        [JsonProperty] public int ResourcesGathered { get; private set; }
 
         public List<Carrier> CarriersGoingBackToStorage { get; } = new List<Carrier>();
 
@@ -53,6 +55,7 @@ namespace Game.Model.Buildings.ResourceProducing
                     resourceList.Add(typeof(TResource), ResourcesGathered);
                     ResourcesGathered = 0;
                 }
+
                 CarriersGoingBackToStorage.Add(carrier);
                 carrier.Load(resourceList);
             }

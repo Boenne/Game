@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Game.Model.Buildings.MainBuildings;
 using Game.Model.Buildings.ResourceProducing;
 using Game.Model.Buildings.Settings;
 using Game.Model.Factories;
@@ -27,9 +28,9 @@ namespace Game.Model.Tests.Buildings.MainBuildings
         private readonly Mock<IWorkerFactoryService> _workerFactoryService;
         private readonly Mock<IToolFactoryService> _toolFactoryService;
 
-        private Model.Buildings.MainBuildings.Settlement GetSettlement(Map map = null)
+        private Settlement GetSettlement(Map map = null)
         {
-            return new Model.Buildings.MainBuildings.Settlement(1, 2, 2, _toolFactoryService.Object,
+            return new Settlement(1, 2, 2, _toolFactoryService.Object,
                 _workerFactoryService.Object, _buildingFactoryService.Object, map ?? new Map(0));
         }
 

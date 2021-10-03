@@ -3,11 +3,14 @@ using System.Linq;
 using Game.Model.Buildings.Settings;
 using Game.Model.Resources;
 using Game.Model.Workers;
+using Newtonsoft.Json;
 
 namespace Game.Model.Buildings.MainBuildings
 {
     public class Storage : Identifiable
     {
+        [JsonProperty] private int _numberOfCarriers;
+
         public Storage(int numberOfCarriers, int carrierResourceLimit)
         {
             Carriers = Enumerable.Range(0, numberOfCarriers).Select(x => new Carrier(carrierResourceLimit)).ToList();
@@ -16,9 +19,13 @@ namespace Game.Model.Buildings.MainBuildings
             Resources = StartingResources.Resources.Copy();
         }
 
-        public ResourceList Resources { get; private set; }
-        public List<Carrier> Carriers { get; }
-        private int _numberOfCarriers;
+        public Storage()
+        {
+        }
+
+        [JsonProperty] public ResourceList Resources { get; private set; }
+
+        [JsonProperty] public List<Carrier> Carriers { get; private set; }
 
         public List<Carrier> GetCarriers(params Urn[] ids)
         {
@@ -64,7 +71,8 @@ namespace Game.Model.Buildings.MainBuildings
             lock (Lock)
             {
                 Carriers.ForEach(x => x.Upgrade(newCarrierResourceLimit));
-                Carriers.AddRange(Enumerable.Range(0, newNumberOfCarriers - _numberOfCarriers).Select(x => new Carrier(newCarrierResourceLimit)));
+                Carriers.AddRange(Enumerable.Range(0, newNumberOfCarriers - _numberOfCarriers)
+                    .Select(x => new Carrier(newCarrierResourceLimit)));
                 _numberOfCarriers = newCarrierResourceLimit;
             }
         }

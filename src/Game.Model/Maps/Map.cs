@@ -1,12 +1,15 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace Game.Model.Maps
 {
     public class Map
     {
         private static readonly object Lock = new object();
-        private readonly Urn[,] _map;
-        private readonly int _mapSize;
+
+        [JsonProperty] private readonly Urn[,] _map;
+
+        [JsonProperty] private readonly int _mapSize;
 
         public Map(int size)
         {

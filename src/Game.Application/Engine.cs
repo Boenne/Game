@@ -1,7 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System.IO;
+using System.Threading.Tasks;
 using Game.Model;
-using Game.Model.Buildings.Settlement;
+using Game.Model.Buildings.MainBuildings;
 using Game.Model.Factories;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Game.Application
 {
@@ -33,6 +36,21 @@ namespace Game.Application
         public void StopResourceProduction()
         {
             _produceResources = false;
+        }
+
+        public void SaveGame(Settlement settlement)
+        {
+            var serializer = new JsonSerializer();
+            serializer.Converters.Add(new JavaScriptDateTimeConverter());
+            serializer.NullValueHandling = NullValueHandling.Ignore;
+            serializer.TypeNameHandling = TypeNameHandling.Auto;
+            serializer.Formatting = Formatting.Indented;
+
+            using (var sw = new StreamWriter(File.Create("savedgame2.json")))
+            using (JsonWriter writer = new JsonTextWriter(sw))
+            {
+                serializer.Serialize(writer, settlement, typeof(Settlement));
+            }
         }
     }
 }

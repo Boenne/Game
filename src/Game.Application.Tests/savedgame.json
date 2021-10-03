@@ -1,0 +1,116 @@
+{
+  "MaximumNumberOfWorkers": 2,
+  "Level": 0,
+  "Buildings": [
+    {
+      "AvailableResources": 93,
+      "ResourcesGathered": 7,
+      "CarriersGoingBackToStorage": [
+
+      ],
+      "Level": 1,
+      "Workers": [
+        {
+          "Output": 5,
+          "Level": 1,
+          "Tool": {
+            "Name": "Stone Pickaxe",
+            "Modifier": 2,
+            "Level": 1,
+            "Id": "31c80106-4f1a-44ac-bb3a-ce875a2bce49"
+          },
+          "Id": "16836696-e55b-4188-ad65-2e9f136a6c21"
+        }
+      ],
+      "ObjType": 4,
+      "Id": "370f25f0-4584-447b-a917-8c9de5fca982"
+    },
+    {
+      "AvailableResources": 92,
+      "ResourcesGathered": 6,
+      "CarriersGoingBackToStorage": [
+        {
+          "MaxResourceLimit": 2,
+          "Resources": {
+            "Game.Model.Resources.Food, Game.Model, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": 2
+          },
+          "Id": "779d8cc3-d0f1-4084-8733-2e8884aec9ce"
+        }
+      ],
+      "Level": 1,
+      "Workers": [
+        {
+          "Output": 5,
+          "Level": 1,
+          "Tool": {
+            "Name": "Wooden Rake",
+            "Modifier": 3,
+            "Level": 1,
+            "Id": "f3f3bb48-96a7-461e-b7e2-c1efb79f5ef6"
+          },
+          "Id": "13104203-0e7d-4ace-936d-3d6d40bfb524"
+        }
+      ],
+      "ObjType": 1,
+      "Id": "9d52be2c-5e0d-4a12-ac55-d03e9c96d74d"
+    },
+    {
+      "AvailableResources": 100,
+      "ResourcesGathered": 0,
+      "CarriersGoingBackToStorage": [
+
+      ],
+      "Level": 1,
+      "Workers": [
+
+      ],
+      "ObjType": 3,
+      "Id": "6b66e463-90e7-4a37-ac04-55d55b4f93a3"
+    },
+    {
+      "AvailableResources": 100,
+      "ResourcesGathered": 0,
+      "CarriersGoingBackToStorage": [
+
+      ],
+      "Level": 1,
+      "Workers": [
+
+      ],
+      "ObjType": 2,
+      "Id": "f07928ca-9051-4d6e-8491-8e9530c02b8b"
+    }
+  ],
+  "Storage": {
+    "Resources": {
+      "Game.Model.Resources.Lumber, Game.Model, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": 200,
+      "Game.Model.Resources.Stone, Game.Model, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": 200
+    },
+    "Carriers": [
+      {
+        "MaxResourceLimit": 2,
+        "Resources": null,
+        "Id": "8b0c6f72-8152-4880-8ce6-2f191c11fa5f"
+      }
+    ],
+    "Id": "95a62464-9000-414b-bce1-3b8a51af2f3e"
+  },
+  "Keep": {
+    "AvailableWorkers": [
+
+    ],
+    "Id": "56b38a4d-6702-46ac-a864-c93e9c2ecc17"
+  },
+  "Forge": {
+    "Tools": [
+
+    ],
+    "Level": 0,
+    "Workers": [
+
+    ],
+    "ObjType": 5,
+    "Id": "de17390b-3fc1-49fb-a576-1c21f973b7da"
+  },
+  "Id": "cd341a02-b4f8-4ebe-84e0-cb52e096a3a3"
+}
