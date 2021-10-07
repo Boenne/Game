@@ -183,14 +183,14 @@ namespace Game.Model.Buildings.MainBuildings
         {
             var workers = Keep.GetWorkers(workerIds);
             await Task.Delay(ExecutionTimes.WorkerTravelTime);
-            foreach (var worker in workers.Where(x => x.GetType() == typeof(T))) building.AddWorker((T) worker);
+            foreach (var worker in workers) building.AddWorker((T) worker);
         }
 
         public async Task MoveWorkersToKeep<T>(Building<T> building, params Urn[] workerIds) where T : Worker
         {
             var workers = building.RemoveWorker(workerIds);
             await Task.Delay(ExecutionTimes.WorkerTravelTime);
-            foreach (var worker in workers.Where(x => x.GetType() == typeof(T))) Keep.AddWorker(worker);
+            foreach (var worker in workers) Keep.AddWorker(worker);
         }
 
         public async Task Upgrade()

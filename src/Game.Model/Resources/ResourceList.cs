@@ -53,13 +53,13 @@ namespace Game.Model.Resources
 
         public static ResourceList operator +(ResourceList lhs, ResourceList rhs)
         {
-            if (rhs.Keys.Any(x => !lhs.ContainsKey(x)))
-                throw new ArgumentOutOfRangeException();
-
-            var resourceList = new ResourceList();
+            var resourceList = lhs.Copy();
             foreach (var rhsKey in rhs.Keys)
             {
-                resourceList.Add(rhsKey, lhs[rhsKey] + rhs[rhsKey]);
+                if (!lhs.ContainsKey(rhsKey))
+                    resourceList.Add(rhsKey, rhs[rhsKey]);
+                else
+                    resourceList.Add(rhsKey, lhs[rhsKey] - rhs[rhsKey]);
             }
 
             return resourceList;

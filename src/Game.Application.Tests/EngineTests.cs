@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Game.Model;
+using Game.Model.Buildings;
 using Game.Model.Buildings.MainBuildings;
 using Game.Model.Buildings.ResourceProducing;
 using Game.Model.Buildings.Settings;
@@ -111,7 +112,7 @@ namespace Game.Application.Tests
             map.SetLocation(new Coordinates(3, 2), new ResourceSite(typeof(Lumber), 6));
 
             settlement.Forge.AddTool(hammer);
-            settlement.Keep.AddWorker(blacksmith);
+            settlement.Forge.AddWorker(blacksmith);
             settlement.Buildings.Add(copperMine);
             settlement.Buildings.Add(farm);
             settlement.Buildings.Add(lumberyard);
@@ -120,8 +121,12 @@ namespace Game.Application.Tests
             var storageCarrier = settlement.Storage.Carriers.First();
             var farmCarrier = settlement.Storage.Carriers.Last();
 
-            var carriers = settlement.Storage.GetCarriers(farmCarrier.Id);
-            farm.LoadCarrier(carriers.First());
+            var tempCarriers = settlement.Storage.GetCarriers(farmCarrier.Id);
+            farm.LoadCarrier(tempCarriers.First());
+            tempCarriers = settlement.Storage.GetCarriers(storageCarrier.Id);
+            copperMine.LoadCarrier(tempCarriers.First());
+            settlement.Storage.UnloadCarrier(tempCarriers.First());
+            copperMine.CarrierArrivedAtStorage(tempCarriers.First());
 
             _engine.SaveGame(settlement);
 
@@ -136,18 +141,16 @@ namespace Game.Application.Tests
             newSettlement.MaximumNumberOfWorkers.ShouldBe(settlement.MaximumNumberOfWorkers);
             newSettlement.Level.ShouldBe(settlement.Level);
 
-            var newCarrier = newSettlement.Storage.Carriers.Single();
-            newCarrier.BaseId.ShouldBe(storageCarrier.BaseId);
-            newCarrier.MaxResourceLimit.ShouldBe(storageCarrier.MaxResourceLimit);
-
-
+            var newStorageCarrier = newSettlement.Storage.Carriers.Single();
+            newStorageCarrier.BaseId.ShouldBe(storageCarrier.BaseId);
+            newStorageCarrier.MaxResourceLimit.ShouldBe(storageCarrier.MaxResourceLimit);
+            
             newSettlement.Forge.BaseId.ShouldBe(settlement.Forge.BaseId);
             var newBlacksmith = newSettlement.Forge.Workers.Single();
             newBlacksmith.BaseId.ShouldBe(blacksmith.BaseId);
             newBlacksmith.CraftingSpeedReduction.ShouldBe(blacksmith.CraftingSpeedReduction);
             newBlacksmith.Level.ShouldBe(blacksmith.Level);
-
-
+            
             var newHammer = newSettlement.Forge.Tools.Single();
             newHammer.BaseId.ShouldBe(hammer.BaseId);
             newHammer.Name.ShouldBe(hammer.Name);
